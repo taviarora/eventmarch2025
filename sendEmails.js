@@ -123,7 +123,7 @@ function sendEmail(toEmail, message, subject) {
         subject,
 
         from_name: `{fromname1}`,
-        to_name: 'toname1' ,
+        to_name: toname1 ,
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
         email: "tpsarora@gmail.com", // Send to the recipient email
         link: "https://taviarora.github.io/eventmarch2025/Birthdays/1.png",
