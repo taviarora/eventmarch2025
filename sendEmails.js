@@ -121,7 +121,7 @@ function sendEmail(toEmail, message, subject) {
         message,
         subject,
 
-        from_name: `${fromname1}`,
+        from_name: `{fromname1}`,
         to_name: "Malika",
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
         email: "tpsarora@gmail.com", // Send to the recipient email
