@@ -121,7 +121,7 @@ function sendEmail(toEmail, message, subject) {
         message,
         subject,
 
-        from_name: `${data.From_Name}`,
+        from_name: "Tavinder Arora",
         to_name: "Malika",
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
         email: "tpsarora@gmail.com", // Send to the recipient email
