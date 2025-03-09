@@ -117,7 +117,6 @@ function sendEmail(toEmail, message, subject) {
       EMAILJS_TEMPLATE_ID,
       {
         const filename = "1.png";
-   
         message,
         subject,
 
