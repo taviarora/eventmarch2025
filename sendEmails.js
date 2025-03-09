@@ -116,7 +116,7 @@ function sendEmail(toEmail, message, subject) {
       EMAILJS_SERVICE_ID,
       EMAILJS_TEMPLATE_ID,
       {
-        var filename="1.png";
+        let filename= '1.png';
         message,
         subject,
 
