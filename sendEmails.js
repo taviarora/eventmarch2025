@@ -65,6 +65,7 @@ async function sendEmails() {
       const data = doc.data();
       console.log("Data: ", JSON.stringify(data, null, 2));
       if (data.Date === todayFormatted) {
+        const fromname1 = ${data.From_Name};
         const fileName = "1.png";
         const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
         sendEmail(data.To_Email, message, `Happy ${data.Occasion}!`);
@@ -120,7 +121,7 @@ function sendEmail(toEmail, message, subject) {
         message,
         subject,
 
-        from_name: "Tavinder Arora",
+        from_name: fromname1,
         to_name: "Malika",
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
         email: "tpsarora@gmail.com", // Send to the recipient email
