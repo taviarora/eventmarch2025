@@ -19,6 +19,8 @@ jobs:
   send-emails:
     runs-on: ubuntu-latest
     steps:
+      - name: Save Secret to File
+          run: echo "${{ secrets.MY_SECRET }}" > secret.txt
       - name: Checkout repository
         uses: actions/checkout@v3
 
