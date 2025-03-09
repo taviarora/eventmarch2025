@@ -116,7 +116,7 @@ function sendEmail(toEmail, message, subject) {
       EMAILJS_SERVICE_ID,
       EMAILJS_TEMPLATE_ID,
       {
-        const filename = "1.png";
+        const filen = "1.png",
         message,
         subject,
 
@@ -124,7 +124,7 @@ function sendEmail(toEmail, message, subject) {
         to_name: "Malika",
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
         email: "tpsarora@gmail.com", // Send to the recipient email
-        link: "https://taviarora.github.io/eventmarch2025/Birthdays/${filename}",
+        link: "https://taviarora.github.io/eventmarch2025/Birthdays/${filen}",
       },
       {
         publicKey: "qcbXaXrWGMaIRt6_o",
