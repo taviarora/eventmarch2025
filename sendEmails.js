@@ -122,7 +122,7 @@ function sendEmail(toEmail, message, subject) {
         from_name: "Tavinder Arora",
         to_name: "Malika",
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
-        email: toEmail, // Send to the recipient email
+        email: "malikaarora2202@gmail.com", // Send to the recipient email
         link: "./Birthdays/image.png",
       },
       {
