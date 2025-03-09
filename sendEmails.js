@@ -124,7 +124,7 @@ function sendEmail(toEmail, message, subject) {
         to_name: "Malika",
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
         email: "tpsarora@gmail.com", // Send to the recipient email
-        link: `https://taviarora.github.io/eventmarch2025/Birthdays/${fileName}`,
+        link: "https://taviarora.github.io/eventmarch2025/Birthdays/`${fileName}`",
       },
       {
         publicKey: "qcbXaXrWGMaIRt6_o",
