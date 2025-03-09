@@ -65,6 +65,7 @@ async function sendEmails() {
       const data = doc.data();
       console.log("Data: ", JSON.stringify(data, null, 2));
       if (data.Date === todayFormatted) {
+        const fileName = "1.png";
         const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
         sendEmail(data.To_Email, message, `Happy ${data.Occasion}!`);
       }
@@ -123,7 +124,7 @@ function sendEmail(toEmail, message, subject) {
         to_name: "Malika",
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
         email: "tpsarora@gmail.com", // Send to the recipient email
-        link: "https://taviarora.github.io/eventmarch2025/Birthdays/1.png",
+        link: "https://taviarora.github.io/eventmarch2025/Birthdays/${fileName}",
       },
       {
         publicKey: "qcbXaXrWGMaIRt6_o",
