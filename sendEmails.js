@@ -16,8 +16,6 @@ const serviceAccountKey = Buffer.from(
 ).toString("utf8");
 const serviceAccount = JSON.parse(serviceAccountKey);
 
-console.log(serviceAccount);
-
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCfbqC-893YBqhgR5OR0eHyX-EXzCIoTC8",
   authDomain: "jwdatabase-f0e20.firebaseapp.com",
@@ -36,9 +34,7 @@ const EMAILJS_TEMPLATE_ID = "template_m0u22pm";
 const EMAILJS_USER_ID = "qcbXaXrWGMaIRt6_o";
 
 // Load Firebase config from environment variables
-//console.log(process.env);
 const firebaseConfig = FIREBASE_CONFIG;
-//const firebaseConfig = JSON.parse(FIREBASE_CONFIG);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -80,40 +76,10 @@ async function sendEmails() {
 function sendEmail(toEmail, message, subject, fromname, toname, fileName) {
   console.log("ID ", EMAILJS_USER_ID);
 
-  // try {
-  //   emailjs.init(EMAILJS_USER_ID);
-  //   console.log("Initialized EmailJS with user ID:", EMAILJS_USER_ID);
-  // } catch (initError) {
-  //   console.error("Error initializing EmailJS:", initError);
-  //   return; // Exit the function if initialization fails
-  // }
-
   console.log("Sending email to ", toEmail);
 
   emailjs.init(EMAILJS_USER_ID);
 
-  // emailjs
-  //   .send(
-  //     EMAILJS_SERVICE_ID,
-  //     EMAILJS_TEMPLATE_ID,
-  //     {
-  //       message: "Test Message",
-  //       subject: "Test Subject",
-  //       to_email: "malikaarora2202@gmail.com",
-  //     },
-  //     {
-  //       publicKey: "qcbXaXrWGMaIRt6_o",
-  //       privateKey: "g1HH-DK2771AldTTDT3Tk"
-  //     }
-  //   )
-  //   .then(() => console.log("Email sent!"))
-  //   .catch((error) => console.error("Error sending email:", error));
-
-  // ,
-  //   {
-  //     publicKey: "qcbXaXrWGMaIRt6_o",
-  //     privateKey: serviceAccount.private_key
-  //   }
   emailjs
     .send(
       EMAILJS_SERVICE_ID,
