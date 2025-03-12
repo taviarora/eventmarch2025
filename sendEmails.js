@@ -91,7 +91,7 @@ function sendEmail(toEmail, message, subject, fromname, toname, fileName) {
         from_name: fromname,
         to_name: toname,
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
-        email: "malikaarora2202@gmail.com", // Send to the recipient email
+        email: "tpsarora@gmail.com", // Send to the recipient email
         link: "https://taviarora.github.io/eventmarch2025/Birthdays/" + fileName
       },
       {
