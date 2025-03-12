@@ -65,11 +65,11 @@ async function sendEmails() {
       const data = doc.data();
       console.log("Data: ", JSON.stringify(data, null, 2));
       if (data.Date === todayFormatted) {
-        const fromname1 = data.From_Name;
-        const toname1 = data.To_Name;
+        const fromname = data.From_Name;
+        const toname = data.To_Name;
         const fileName = "1.png";
         const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
-        sendEmail(data.To_Email, message, `Happy ${data.Occasion}!`);
+        sendEmail(data.To_Email, message, `Happy ${data.Occasion}!`, fromname, toname, fileName);
       }
     });
   } catch (error) {
@@ -77,7 +77,7 @@ async function sendEmails() {
   }
 }
 
-function sendEmail(toEmail, message, subject) {
+function sendEmail(toEmail, message, subject, fromname, toname, fileName) {
   console.log("ID ", EMAILJS_USER_ID);
 
   // try {
@@ -122,11 +122,11 @@ function sendEmail(toEmail, message, subject) {
         message,
         subject,
 
-        from_name: `{fromname1}`,
-        to_name: "toname1",
+        from_name: fromname,
+        to_name: toname,
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
         email: "tpsarora@gmail.com", // Send to the recipient email
-        link: "https://taviarora.github.io/eventmarch2025/Birthdays/1.png",
+        link: "https://taviarora.github.io/eventmarch2025/Birthdays/" + fileName
       },
       {
         publicKey: "qcbXaXrWGMaIRt6_o",
