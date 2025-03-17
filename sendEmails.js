@@ -28,9 +28,7 @@ const FIREBASE_CONFIG = {
 };
 
 const EMAILJS_SERVICE_ID = "service_jitwsrj";
-
 const EMAILJS_TEMPLATE_ID = "template_m0u22pm";
-
 const EMAILJS_USER_ID = "qcbXaXrWGMaIRt6_o";
 
 // Load Firebase config from environment variables
@@ -52,6 +50,10 @@ async function sendEmails() {
 
   console.log("India Date:", todayFormatted);
 
+  // Generate a random number between 1 and 3
+  const ran_num = Math.floor(Math.random() * 3) + 1;
+  console.log("Random number generated: ", ran_num);
+
   try {
     const snapshot = await db.collection("Event").get();
 
@@ -63,9 +65,21 @@ async function sendEmails() {
       if (data.Date === todayFormatted) {
         const fromname = data.From_Name;
         const toname = data.To_Name;
-        const fileName = "1.png";
+
+        const fileName = ran_num + ".png";
         const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
-        sendEmail(data.To_Email, message, `Happy ${data.Occasion}!`, fromname, toname, fileName);
+
+        // Use ran_num for any specific condition or logic (just an example)
+        if (ran_num === 1) {
+          // Send email with a custom subject
+          sendEmail(data.To_Email, message, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName);
+        } else if (ran_num === 2) {
+          // Send a different subject or additional details
+          sendEmail(data.To_Email, message, `Celebrating ${data.Occasion}!`, fromname, toname, fileName);
+        } else {
+          // Default message or subject
+          sendEmail(data.To_Email, message, `Cheers for ${data.Occasion}!`, fromname, toname, fileName);
+        }
       }
     });
   } catch (error) {
@@ -73,34 +87,35 @@ async function sendEmails() {
   }
 }
 
-function sendEmail(toEmail, message, subject, fromname, toname, fileName) {
-  console.log("ID ", EMAILJS_USER_ID);
+async function sendEmail(toEmail, message, subject, fromname, toname, fileName) {
+  try {
+    console.log("ID ", EMAILJS_USER_ID);
+    console.log("Sending email to ", toEmail);
 
-  console.log("Sending email to ", toEmail);
+    emailjs.init(EMAILJS_USER_ID);
 
-  emailjs.init(EMAILJS_USER_ID);
-
-  emailjs
-    .send(
+    const response = await emailjs.send(
       EMAILJS_SERVICE_ID,
       EMAILJS_TEMPLATE_ID,
       {
         message,
         subject,
-
         from_name: fromname,
         to_name: toname,
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
-        email: "tpsarora@gmail.com", // Send to the recipient email
-        link: "https://taviarora.github.io/eventmarch2025/Birthdays/" + fileName
+        email: toEmail, // Send to the recipient email
+        link: `https://taviarora.github.io/eventmarch2025/Birthdays/${fileName}`,
       },
       {
-        publicKey: "qcbXaXrWGMaIRt6_o",
-        privateKey: "g1HH-DK2771AldTTDT3Tk",
+        publicKey: EMAILJS_USER_ID,
+        privateKey: process.env.EMAILJS_PRIVATE_KEY,
       }
-    )
-    .then(() => console.log("Email sent!"))
-    .catch((error) => console.error("Error sending email:", error));
+    );
+
+    console.log("Email sent successfully:", response);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
 }
 
 sendEmails();
