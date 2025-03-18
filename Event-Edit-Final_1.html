@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management</title>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"></script>
+    <style>
+        h1 {
+            color: #333;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        label {
+            margin-right: 10px;
+            width: 150px;
+        }
+
+        input, select {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: maroon;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkred;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: maroon;
+            color: white;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid white;
+        }
+
+        table td {
+            color: white;
+        }
+
+        #messageArea {
+            margin: 10px 0;
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Event Management</h1>
+        <div id="messageArea"></div>
+
+        <!-- Form to Add or Edit Event -->
+        <form id="editForm">
+            <h3>Add or Edit Event</h3>
+            <div class="form-group">
+                <label for="SNo">Serial Number:</label>
+                <input type="number" id="SNo" required>
+
+                <label for="From_Name">From Name:</label>
+                <input type="text" id="From_Name" required>
+
+                <label for="From_Email">From Email:</label>
+                <input type="text" id="From_Email" required>
+
+                <label for="From_Mobile">From Mobile:</label>
+                <input type="text" id="From_Mobile" required>
+
+                <label for="To_Name">To Name:</label>
+                <input type="text" id="To_Name" required>
+
+                <label for="To_Gname">Greet Name:</label>
+                <input type="text" id="To_Gname" required>
+
+                <label for="To_Email">To Email:</label>
+                <input type="text" id="To_Email" required>
+
+                <label for="To_Mobile">To Mobile:</label>
+                <input type="text" id="To_Mobile" required>
+
+                <label for="Occasion">Occasion:</label>
+                <select id="Occasion" required>
+                    <option value="">Select an Occasion</option>
+                    <option value="Birthday">Birthday</option>
+                    <option value="Anniversary">Anniversary</option>
+                    <option value="Reminder">Reminder</option>
+                </select>
+
+                <label for="Date">Date:</label>
+                <input type="date" id="Date" required>
+            </div>
+            <button type="submit">Save Event</button>
+        </form>
+
+        <h3>Event List</h3>
+        <table id="eventTable">
+            <thead>
+                <tr>
+                    <th>Serial Number</th>
+                    <th>From Name</th>
+                    <th>From Email</th>
+                    <th>From Mobile</th>
+                    <th>To Name</th>
+                    <th>Greet Name</th>
+                    <th>To Email</th>
+                    <th>To Mobile</th>
+                    <th>Occasion</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="eventList"></tbody>
+        </table>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfbqC-893YBqhgR5OR0eHyX-EXzCIoTC8",
+            authDomain: "jwdatabase-f0e20.firebaseapp.com",
+            databaseURL: "https://jwdatabase-f0e20-default-rtdb.firebaseio.com",
+            projectId: "jwdatabase-f0e20",
+            storageBucket: "jwdatabase-f0e20.appspot.com",
+            messagingSenderId: "1335908909",
+            appId: "1:1335908909:web:0c132d7c79008c490c36a4",
+            measurementId: "G-BQG1N754TN"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let currentDocId = null; // Track the current document ID for editing
+
+        // Function to get all events
+        async function getEvent() {
+            const eventList = document.getElementById("eventList");
+            eventList.innerHTML = "";
+
+            const eventCollection = collection(db, "Event");
+            try {
+                const snapshot = await getDocs(eventCollection);
+                if (snapshot.empty) {
+                    eventList.innerHTML = "<tr><td colspan='10'>No Events found.</td></tr>";
+                } else {
+                    const sortedDocs = snapshot.docs.sort((a, b) => {
+                        const eventA = a.data();
+                        const eventB = b.data();
+                        return eventA.SNo - eventB.SNo; // Ascending order of SNo
+                    });
+
+                    sortedDocs.forEach(doc => {
+                        const eventData = doc.data();
+                        const row = document.createElement("tr");
+
+                        row.innerHTML = `
+                            <td>${eventData.SNo}</td>
+                            <td>${eventData.From_Name}</td>
+                            <td>${eventData.From_Email}</td>
+                            <td>${eventData.From_Mobile}</td>
+                            <td>${eventData.To_Name}</td>
+                            <td>${eventData.To_Gname}</td>
+                            <td>${eventData.To_Email}</td>
+                            <td>${eventData.To_Mobile}</td>
+                            <td>${eventData.Occasion}</td>
+                            <td>${eventData.Date}</td>
+                            <td>
+                                <button onclick="editEvent('${doc.id}', '${encodeURIComponent(JSON.stringify(eventData))}')">Edit</button>
+                                <button onclick="deleteEvent('${doc.id}')">Delete</button>
+                            </td>
+                        `;
+                        eventList.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error("Error getting events:", error);
+                eventList.innerHTML = "<tr><td colspan='10'>Error loading Events.</td></tr>";
+            }
+        }
+
+        // Check for duplicate Serial Number
+        async function checkDuplicateSNo(sno1) {
+            const eventCollection = collection(db, "Event");
+            const q = query(eventCollection, where("SNo", "==", sno1));
+            const querySnapshot = await getDocs(q);
+            return !querySnapshot.empty; // returns true if SNo exists
+        }
+
+        // Form submission handler (Add or Update event)
+        document.getElementById('editForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const sno1 = parseInt(document.getElementById("SNo").value);
+            const From_Name1 = document.getElementById("From_Name").value;
+            const From_Email1 = document.getElementById("From_Email").value;
+            const From_Mobile1 = document.getElementById("From_Mobile").value;
+            const To_Name1 = document.getElementById("To_Name").value;
+            const To_Gname1 = document.getElementById("To_Gname").value;
+            const To_Email1 = document.getElementById("To_Email").value;
+            const To_Mobile1 = document.getElementById("To_Mobile").value;
+            const OccasionType = document.getElementById("Occasion").value;
+            const date = document.getElementById("Date").value;
+
+            if (currentDocId) {
+                // Edit Event
+                try {
+                    await updateDoc(doc(db, "Event", currentDocId), {
+                        SNo: sno1,
+                        From_Name: From_Name1,
+                        From_Email: From_Email1,
+                        From_Mobile: From_Mobile1,
+                        To_Name: To_Name1,
+                        To_Gname: To_Gname1,
+                        To_Email: To_Email1,
+                        To_Mobile: To_Mobile1,
+                        Occasion: OccasionType,
+                        Date: date
+                    });
+
+                    showMessage("Event updated successfully!");
+                    getEvent();
+                    resetForm();
+                } catch (error) {
+                    console.error("Error updating event:", error);
+                    showMessage("Error updating Event.", "red");
+                }
+            } else {
+                // Add New Event
+                try {
+                    const isDuplicate = await checkDuplicateSNo(sno1);
+                    if (isDuplicate) {
+                        showMessage("Error: Event with Serial Number " + sno1 + " already exists.", "red");
+                        return;
+                    }
+
+                    await addDoc(collection(db, "Event"), {
+                        SNo: sno1,
+                        From_Name: From_Name1,
+                        From_Email: From_Email1,
+                        From_Mobile: From_Mobile1,
+                        To_Name: To_Name1,
+                        To_Gname: To_Gname1,
+                        To_Email: To_Email1,
+                        To_Mobile: To_Mobile1,
+                        Occasion: OccasionType,
+                        Date: date
+                    });
+
+                    showMessage("Event added successfully!");
+                    getEvent();
+                    resetForm();
+                } catch (error) {
+                    console.error("Error adding event:", error);
+                    showMessage("Error saving Event.", "red");
+                }
+            }
+        });
+
+        // Show success/error messages
+        function showMessage(message, color = "green") {
+            const messageArea = document.getElementById("messageArea");
+            messageArea.style.color = color;
+            messageArea.textContent = message;
+        }
+
+        // Reset the form and change button text back to 'Save Event'
+        function resetForm() {
+            currentDocId = null;
+            document.getElementById('editForm').reset();
+            document.querySelector("button[type='submit']").textContent = "Save Event";
+        }
+
+        // Edit Event
+        window.editEvent = async function(docId, eventData) {
+            eventData = JSON.parse(decodeURIComponent(eventData));
+            currentDocId = docId; // Store the current document ID
+
+            // Populate the form fields with the event data
+            document.getElementById("SNo").value = eventData.SNo;
+            document.getElementById("From_Name").value = eventData.From_Name;
+            document.getElementById("From_Email").value = eventData.From_Email;
+            document.getElementById("From_Mobile").value = eventData.From_Mobile;
+            document.getElementById("To_Name").value = eventData.To_Name;
+            document.getElementById("To_Gname").value = eventData.To_Gname;
+            document.getElementById("To_Email").value = eventData.To_Email;
+            document.getElementById("To_Mobile").value = eventData.To_Mobile;
+            document.getElementById("Occasion").value = eventData.Occasion;
+            document.getElementById("Date").value = eventData.Date;
+
+            // Change button text to 'Update Event'
+            document.querySelector("button[type='submit']").textContent = "Update Event";
+        };
+
+        // Delete Event
+        window.deleteEvent = async function(docId) {
+            if (confirm("Are you sure you want to delete this event?")) {
+                try {
+                    await deleteDoc(doc(db, "Event", docId));
+                    showMessage("Event deleted successfully!");
+                    getEvent();
+                } catch (error) {
+                    console.error("Error deleting event:", error);
+                    showMessage("Error deleting Event.", "red");
+                }
+            }
+        };
+
+        // Initialize by fetching events
+        getEvent();
+    </script>
+</body>
+
+</html>

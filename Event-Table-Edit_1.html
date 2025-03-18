@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management - Alter Fields</title>
+    <script type="module">
+        // Import Firebase and Firestore functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, updateDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfbqC-893YBqhgR5OR0eHyX-EXzCIoTC8",
+            authDomain: "jwdatabase-f0e20.firebaseapp.com",
+            databaseURL: "https://jwdatabase-f0e20-default-rtdb.firebaseio.com",
+            projectId: "jwdatabase-f0e20",
+            storageBucket: "jwdatabase-f0e20.appspot.com",
+            messagingSenderId: "1335908909",
+            appId: "1:1335908909:web:0c132d7c79008c490c36a4",
+            measurementId: "G-BQG1N754TN"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Function to get the current fields of the "Event" collection and display them in the header
+        const displayFields = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, "Event"));
+                const eventListDiv = document.getElementById("eventList");
+
+                // To hold all unique field names and their types
+                let fieldsSet = new Set();
+
+                // Iterate through the documents and gather all fields
+                querySnapshot.forEach((doc) => {
+                    Object.keys(doc.data()).forEach((field) => {
+                        fieldsSet.add(field);
+                    });
+                });
+
+                // Create the header displaying the field names
+                eventListDiv.innerHTML = "<h3>Current Fields in 'Event' Collection:</h3>";
+                fieldsSet.forEach((field) => {
+                    eventListDiv.innerHTML += `<span>${field}</span><br>`;
+                });
+
+                // Update the delete field dropdown dynamically
+                const deleteFieldDropdown = document.getElementById("deleteFieldDropdown");
+                deleteFieldDropdown.innerHTML = ''; // Clear the dropdown
+
+                // Populate the delete field dropdown with unique field names
+                fieldsSet.forEach((field) => {
+                    const option = document.createElement("option");
+                    option.value = field;
+                    option.textContent = field;
+                    deleteFieldDropdown.appendChild(option);
+                });
+
+                // Update the rename field dropdown dynamically
+                const renameFieldDropdown = document.getElementById("renameFieldDropdown");
+                renameFieldDropdown.innerHTML = ''; // Clear the dropdown
+
+                // Populate the rename field dropdown with unique field names
+                fieldsSet.forEach((field) => {
+                    const option = document.createElement("option");
+                    option.value = field;
+                    option.textContent = field;
+                    renameFieldDropdown.appendChild(option);
+                });
+
+                // Update the edit field dropdown dynamically with names and types
+                const editFieldDropdown = document.getElementById("editFieldDropdown");
+                editFieldDropdown.innerHTML = ''; // Clear the dropdown
+
+                // Populate the edit field dropdown with unique field names
+                fieldsSet.forEach((field) => {
+                    const option = document.createElement("option");
+                    option.value = field;
+                    option.textContent = field;
+                    editFieldDropdown.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error("Error fetching documents:", error);
+                const eventListDiv = document.getElementById("eventList");
+                eventListDiv.innerHTML = "<p>Error loading fields from Firestore.</p>";
+            }
+        };
+
+        // Function to add a new field to all documents in the Event collection
+        const addFieldToDocuments = async (newField, value, fieldType) => {
+            try {
+                // Convert the value based on the field type
+                if (fieldType === "numeric") {
+                    value = parseFloat(value);
+                    if (isNaN(value)) {
+                        alert("Please enter a valid number.");
+                        return;
+                    }
+                } else if (fieldType === "date") {
+                    value = new Date(value);
+                    if (isNaN(value.getTime())) {
+                        alert("Please enter a valid date.");
+                        return;
+                    }
+                }
+
+                const querySnapshot = await getDocs(collection(db, "Event"));
+                querySnapshot.forEach((doc) => {
+                    // Update each document to add the new field with the correct type
+                    updateDoc(doc.ref, {
+                        [newField]: value
+                    }).then(() => {
+                        console.log(`Field "${newField}" added to document ${doc.id}`);
+                    }).catch((error) => {
+                        console.error("Error adding field:", error);
+                    });
+                });
+
+                // Call displayFields again to refresh the field list
+                displayFields();
+            } catch (error) {
+                console.error("Error fetching documents:", error);
+            }
+        };
+
+        // Function to delete a field from all documents in the Event collection
+        const deleteFieldFromDocuments = async () => {
+            const fieldToDelete = document.getElementById("deleteFieldDropdown").value;
+
+            if (!fieldToDelete) {
+                alert("Please select a field to delete.");
+                return;
+            }
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "Event"));
+                querySnapshot.forEach((doc) => {
+                    // Update each document to delete the specified field
+                    updateDoc(doc.ref, {
+                        [fieldToDelete]: deleteField()
+                    }).then(() => {
+                        console.log(`Field "${fieldToDelete}" deleted from document ${doc.id}`);
+                    }).catch((error) => {
+                        console.error("Error deleting field:", error);
+                    });
+                });
+                alert(`Field "${fieldToDelete}" deleted from all documents.`);
+                // Refresh the field list after deletion
+                displayFields();
+            } catch (error) {
+                console.error("Error fetching documents:", error);
+            }
+        };
+
+        // Function to rename and edit the field type
+        const editFieldInDocuments = async (oldFieldName, newFieldName, newFieldType) => {
+            try {
+                const querySnapshot = await getDocs(collection(db, "Event"));
+                querySnapshot.forEach((doc) => {
+                    const oldValue = doc.data()[oldFieldName];
+
+                    // Convert the old value based on the new type
+                    let updatedValue = oldValue;
+                    if (newFieldType === "numeric") {
+                        updatedValue = parseFloat(oldValue);
+                    } else if (newFieldType === "date") {
+                        updatedValue = new Date(oldValue);
+                    }
+
+                    // Update each document with the new field name and type
+                    updateDoc(doc.ref, {
+                        [newFieldName]: updatedValue
+                    }).then(() => {
+                        console.log(`Field "${oldFieldName}" renamed to "${newFieldName}" with updated type "${newFieldType}" in document ${doc.id}`);
+                    }).catch((error) => {
+                        console.error("Error renaming and updating field type:", error);
+                    });
+
+                    // Optionally delete the old field after renaming
+                    updateDoc(doc.ref, {
+                        [oldFieldName]: deleteField()
+                    }).then(() => {
+                        console.log(`Field "${oldFieldName}" deleted from document ${doc.id}`);
+                    }).catch((error) => {
+                        console.error("Error deleting old field:", error);
+                    });
+                });
+
+                // Refresh the field list after renaming
+                displayFields();
+            } catch (error) {
+                console.error("Error fetching documents:", error);
+            }
+        };
+
+        // Event handler for the Add Field button
+        const addFieldButton = document.getElementById("addField");
+        addFieldButton.addEventListener("click", () => {
+            const newField = prompt("Enter the new field name:");
+            const fieldType = prompt("Enter the field type (string, numeric, date):").toLowerCase();
+            let fieldValue = prompt("Enter the value for the new field:");
+
+            if (!newField || !fieldType || !fieldValue) {
+                alert("All fields are required!");
+                return;
+            }
+
+            if (fieldType === "numeric") {
+                fieldValue = parseFloat(fieldValue);
+                if (isNaN(fieldValue)) {
+                    alert("Please enter a valid number.");
+                    return;
+                }
+            } else if (fieldType === "date") {
+                const date = new Date(fieldValue);
+                if (isNaN(date.getTime())) {
+                    alert("Please enter a valid date.");
+                    return;
+                }
+                fieldValue = date;
+            }
+
+            addFieldToDocuments(newField, fieldValue, fieldType);
+        });
+
+        // Event handler for the Delete Field button
+        const deleteFieldButton = document.getElementById("deleteField");
+        deleteFieldButton.addEventListener("click", () => {
+            deleteFieldFromDocuments();
+        });
+
+        // Event handler for the Edit Field button
+        const editFieldButton = document.getElementById("editField");
+        editFieldButton.addEventListener("click", () => {
+            const oldFieldName = document.getElementById("editFieldDropdown").value;
+            const newFieldName = prompt("Enter the new name for the field:");
+            const newFieldType = prompt("Enter the new field type (string, numeric, date):").toLowerCase();
+
+            if (!oldFieldName || !newFieldName || !newFieldType) {
+                alert("All fields are required!");
+                return;
+            }
+
+            editFieldInDocuments(oldFieldName, newFieldName, newFieldType);
+        });
+
+        // Fetch and display the fields when the page loads
+        window.onload = displayFields;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>View and Alter Fields in Firestore - Event Collection</h1>
+        
+        <!-- This section will display the fields -->
+        <div id="eventList"></div>
+
+        <!-- Add field button -->
+        <button id="addField">Add New Field to All Documents</button><br><br>
+
+        <!-- Dropdown to select field to delete -->
+        <div>
+            <h3>Select a Field to Delete:</h3>
+            <select id="deleteFieldDropdown"></select>
+            <br><br>
+            <button id="deleteField">Delete Selected Field from All Documents</button>
+        </div><br><br>
+
+        <!-- Dropdown to select field to rename -->
+        <div>
+            <h3>Select a Field to Rename:</h3>
+            <select id="renameFieldDropdown"></select>
+            <br><br>
+            <button id="renameField">Rename Selected Field</button>
+        </div><br><br>
+
+        <!-- Dropdown to select field to edit -->
+        <div>
+            <h3>Select a Field to Edit:</h3>
+            <select id="editFieldDropdown"></select>
+            <br><br>
+            <button id="editField">Edit Selected Field</button>
+        </div><br><br>
+
+    </div>
+</body>
+</html>
+
+
+
+
+
+
