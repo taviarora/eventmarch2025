@@ -55,8 +55,7 @@
   
         <button onclick="AddEventsButton()">Add Event</button>
         <button onclick="ModifytableButton()">Modify Table Fields</button>
-
-        <button id="SendEmail">Send Email</button>
+        <button onclick="SendEmail()">Send Email</button>
 </div>
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -71,15 +70,12 @@
         // or use: window.location.href = 'new_page.html'; // This redirects to the new page
          }
 
-         <script src="sendEmails.js"></script>
-         <script>
-        // Adding an event listener to the button
-        document.getElementById('SendEmail').addEventListener('click', function() {
-            // Calling the function from the external JavaScript file
-            runJSFunction();
-        });
-        </script>
-                  
+          <script src="script.js"></script>
+        function SendEmail() {
+        window.open('sendEmails.js'); // This opens a new HTML page
+        // or use: window.location.href = 'new_page.html'; // This redirects to the new page
+         }
+                  </script>
 
     <!-- Firebase SDK -->
     <script type="module">
