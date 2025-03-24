@@ -67,6 +67,7 @@ async function sendEmails() {
         const toname = data.To_Name;
 
         const fileName = ran_num + ".png";
+        console.log(fileName);
         const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
 
         // Use ran_num for any specific condition or logic (just an example)
@@ -107,8 +108,8 @@ async function sendEmail(toEmail, message, subject, fromname, toname, fileName) 
         link: `https://taviarora.github.io/eventmarch2025/Birthdays/${fileName}`,
       },
       {
-        publicKey: EMAILJS_USER_ID,
-        privateKey: process.env.EMAILJS_PRIVATE_KEY,
+        publicKey: "qcbXaXrWGMaIRt6_o",
+        privateKey: "g1HH-DK2771AldTTDT3Tk"
       }
     );
 
