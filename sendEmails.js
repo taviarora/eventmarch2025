@@ -69,18 +69,28 @@ async function sendEmails() {
         const fileName = ran_num + ".png";
         console.log(fileName);
         const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
-
+        const message1 ='Happy Birthday-1';
+        const message2 ='Happy Birthday-2';
+        const message3 ='Happy Birthday-3';
+        const messagevar = "message"+ ran_num;
         // Use ran_num for any specific condition or logic (just an example)
-        if (ran_num === 1) {
+        //if (ran_num === 1) 
+       // {
           // Send email with a custom subject
-          sendEmail(data.To_Email, message, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName);
-        } else if (ran_num === 2) {
+       //   sendEmail(data.To_Email, message, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName);
+       // } 
+       // else if (ran_num === 2) 
+       // {
           // Send a different subject or additional details
-          sendEmail(data.To_Email, message, `Celebrating ${data.Occasion}!`, fromname, toname, fileName);
-        } else {
+        //  sendEmail(data.To_Email, message, `Celebrating ${data.Occasion}!`, fromname, toname, fileName);
+       // } 
+       // else 
+        //{
           // Default message or subject
-          sendEmail(data.To_Email, message, `Cheers for ${data.Occasion}!`, fromname, toname, fileName);
-        }
+        //  sendEmail(data.To_Email, message, `Cheers for ${data.Occasion}!`, fromname, toname, fileName);
+        //}
+        
+        sendEmail(data.To_Email, messagevar, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName);
       }
     });
   } catch (error) {
