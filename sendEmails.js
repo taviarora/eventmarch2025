@@ -77,8 +77,9 @@ async function sendEmails() {
         //const occasionvar='Birthdays';
         console.log(occasion1);
 
+        let occasionvar;
         if (occasion1 === "Birthday") {
-          const occasionvar = 'Birthdays';
+          occasionvar = 'Birthdays';
         }
 
 
@@ -99,7 +100,7 @@ async function sendEmails() {
         //  sendEmail(data.To_Email, message, `Cheers for ${data.Occasion}!`, fromname, toname, fileName);
         //}
 
-        sendEmail(data.To_Email, messagevar, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName);
+        sendEmail(data.To_Email, messagevar, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName, occasionvar);
       }
     });
   } catch (error) {
@@ -107,7 +108,7 @@ async function sendEmails() {
   }
 }
 
-async function sendEmail(toEmail, message, subject, fromname, toname, fileName) {
+async function sendEmail(toEmail, message, subject, fromname, toname, fileName, occasionvar) {
   try {
     console.log("ID ", EMAILJS_USER_ID);
     console.log("Sending email to ", toEmail);
