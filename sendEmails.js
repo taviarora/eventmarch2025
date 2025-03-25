@@ -57,6 +57,9 @@ async function sendEmails() {
   const rannum_bcard = Math.floor(Math.random() * 44) + 1;
   console.log("Random number generated: ", rannum_bcard);
 
+  const rannum_acard = Math.floor(Math.random() * 13) + 1;
+  console.log("Random number generated: ", rannum_acard);
+  
   try {
     const snapshot = await db.collection("Event").get();
 
@@ -73,9 +76,6 @@ async function sendEmails() {
         
         console.log(fileName);
         const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
-        const message1 = 'Happy Birthday-1';
-        const message2 = 'Happy Birthday-2';
-        const message3 = 'Happy Birthday-3';
         const messagevar = eval('message' + ran_num);
         //const occasionvar='Birthdays';
         console.log(occasion1);
@@ -86,9 +86,16 @@ async function sendEmails() {
         if (occasion1 === "Birthday") {
           fileName = "b"+ rannum_bcard + ".JPG";
           occasionvar = "Birthdays";
+          const message1 = 'Happy Birthday-1';
+          const message2 = 'Happy Birthday-2';
+          const message3 = 'Happy Birthday-3';
         }
         if (occasion1 === "Anniversary") {
+          fileName = "a"+ rannum_acard + ".JPG";
           occasionvar = "Anniversarys";
+          const message1 = 'Happy Anniversary-1';
+          const message2 = 'Happy Anniversary-2';
+          const message3 = 'Happy Anniversary-3';
         }
               
 
