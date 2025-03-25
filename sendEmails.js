@@ -77,9 +77,9 @@ async function sendEmails() {
         //const occasionvar='Birthdays';
         console.log(occasion1);
 
-        let occasionvar;
+        var occasionvar;
         if (occasion1 === "Birthday") {
-          occasionvar = 'Birthdays';
+          occasionvar = "Birthdays";
         }
 
         console.log(occasionvar);
