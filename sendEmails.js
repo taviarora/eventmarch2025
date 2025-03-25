@@ -82,6 +82,8 @@ async function sendEmails() {
           occasionvar = 'Birthdays';
         }
 
+        console.log(occasionvar);
+
 
         // Use ran_num for any specific condition or logic (just an example)
         //if (ran_num === 1) 
