@@ -54,6 +54,9 @@ async function sendEmails() {
   const ran_num = Math.floor(Math.random() * 3) + 1;
   console.log("Random number generated: ", ran_num);
 
+  const rannum_bcard = Math.floor(Math.random() * 44) + 1;
+  console.log("Random number generated: ", rannum_bcard);
+
   try {
     const snapshot = await db.collection("Event").get();
 
@@ -80,7 +83,7 @@ async function sendEmails() {
         var occasionvar;
         var fileName;
         if (occasion1 === "Birthday") {
-          fileName = "b"+ ran_num + ".JPG";
+          fileName = "b"+ rannum_bcard + ".JPG";
           occasionvar = "Birthdays";
         }
         if (occasion1 === "Anniversary") {
