@@ -123,8 +123,8 @@ async function sendEmail(toEmail, message, subject, fromname, toname, fileName) 
         to_name: toname,
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
         email: toEmail, // Send to the recipient email
-        //link: `https://taviarora.github.io/eventmarch2025/${occasionvar}/${fileName}`,
-        link: `https://taviarora.github.io/eventmarch2025/Birthdays/${fileName}`,
+        link: `https://taviarora.github.io/eventmarch2025/${occasionvar}/${fileName}`,
+       // link: `https://taviarora.github.io/eventmarch2025/Birthdays/${fileName}`,
       },
       {
         publicKey: "qcbXaXrWGMaIRt6_o",
