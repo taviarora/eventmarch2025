@@ -112,6 +112,7 @@ async function sendEmail(toEmail, message, subject, fromname, toname, fileName, 
   try {
     console.log("ID ", EMAILJS_USER_ID);
     console.log("Sending email to ", toEmail);
+    console.log("File path ", `https://taviarora.github.io/eventmarch2025/${occasionvar}/${fileName}`);
 
     emailjs.init(EMAILJS_USER_ID);
 
