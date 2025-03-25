@@ -75,7 +75,7 @@ async function sendEmails() {
         const messagevar = eval('message' + ran_num);
         const occasionvar;
 
-       if occasion = 'Birthday'
+       if (occasion = 'Birthday')
        {
         occasionvar="Birthdays"
        }
