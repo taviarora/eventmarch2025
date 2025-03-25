@@ -89,15 +89,16 @@ async function sendEmails() {
           const message1 = 'Happy Birthday-1';
           const message2 = 'Happy Birthday-2';
           const message3 = 'Happy Birthday-3';
-        }
-        else (occasion1 === "Anniversary") {
+        
+        else (occasion1 === "Anniversary") 
+        {
           fileName = "a"+ rannum_acard + ".JPG";
           occasionvar = "Anniversarys";
           const message1 = 'Happy Anniversary-1';
           const message2 = 'Happy Anniversary-2';
           const message3 = 'Happy Anniversary-3';
         }
-              
+      }     
 
         console.log(occasionvar);
 
