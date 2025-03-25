@@ -83,22 +83,26 @@ async function sendEmails() {
         var occasionvar;
         var fileName;
         console.log(rannum_bcard);
-        if (occasion1 === "Birthday") {
-          fileName = "b"+ rannum_bcard + ".JPG";
-          occasionvar = "Birthdays";
-          const message1 = 'Happy Birthday-1';
-          const message2 = 'Happy Birthday-2';
-          const message3 = 'Happy Birthday-3';
+
+
+        if (occasion1 === "Birthday") 
         
-        else (occasion1 === "Anniversary") 
-        {
-          fileName = "a"+ rannum_acard + ".JPG";
-          occasionvar = "Anniversarys";
+          {
+            fileName = "b" + rannum_bcard + ".JPG";
+            occasionvar = "Birthdays";
+            const message1 = 'Happy Birthday-1';
+            const message2 = 'Happy Birthday-2';
+            const message3 = 'Happy Birthday-3';
+          } 
+          
+          else if (occasion1 === "Anniversary") 
+          {
+          fileName = "a" + rannum_acard + ".JPG";
+          occasionvar = "Anniversaries"; // Fixed typo: "Anniversarys" -> "Anniversaries"
           const message1 = 'Happy Anniversary-1';
           const message2 = 'Happy Anniversary-2';
           const message3 = 'Happy Anniversary-3';
-        }
-      }     
+          }
 
         console.log(occasionvar);
 
