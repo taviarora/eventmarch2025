@@ -65,7 +65,7 @@ async function sendEmails() {
       if (data.Date === todayFormatted) {
         const fromname = data.From_Name;
         const toname = data.To_Name;
-        const occasion1 = data.Occassion;
+        const occasion1 = data.Occasion;
 
         const fileName = ran_num + ".png";
         console.log(fileName);
@@ -83,24 +83,6 @@ async function sendEmails() {
         }
 
         console.log(occasionvar);
-
-
-        // Use ran_num for any specific condition or logic (just an example)
-        //if (ran_num === 1) 
-        // {
-        // Send email with a custom subject
-        //   sendEmail(data.To_Email, message, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName);
-        // } 
-        // else if (ran_num === 2) 
-        // {
-        // Send a different subject or additional details
-        //  sendEmail(data.To_Email, message, `Celebrating ${data.Occasion}!`, fromname, toname, fileName);
-        // } 
-        // else 
-        //{
-        // Default message or subject
-        //  sendEmail(data.To_Email, message, `Cheers for ${data.Occasion}!`, fromname, toname, fileName);
-        //}
 
         sendEmail(data.To_Email, messagevar, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName, occasionvar);
       }
