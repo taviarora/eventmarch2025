@@ -67,7 +67,7 @@ async function sendEmails() {
         const toname = data.To_Name;
         const occasion1 = data.Occasion;
 
-        const fileName = ran_num + ".png";
+        
         console.log(fileName);
         const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
         const message1 = 'Happy Birthday-1';
@@ -78,9 +78,15 @@ async function sendEmails() {
         console.log(occasion1);
 
         var occasionvar;
+        var fileName;
         if (occasion1 === "Birthday") {
+          fileName = "b"+ ran_num + ".png";
           occasionvar = "Birthdays";
         }
+        if (occasion1 === "Anniversary") {
+          occasionvar = "Anniversarys";
+        }
+              
 
         console.log(occasionvar);
 
