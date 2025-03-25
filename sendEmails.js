@@ -76,7 +76,6 @@ async function sendEmails() {
 
         console.log(fileName);
         const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
-        const messagevar = eval('message' + ran_num);
         //const occasionvar='Birthdays';
         console.log(occasion1);
 
@@ -84,25 +83,25 @@ async function sendEmails() {
         var fileName;
         console.log(rannum_bcard);
 
+        var message1, message2, message3;
 
         if (occasion1 === "Birthday") {
           fileName = "b" + rannum_bcard + ".JPG";
           occasionvar = "Birthdays";
-          const message1 = 'Happy Birthday-1';
-          const message2 = 'Happy Birthday-2';
-          const message3 = 'Happy Birthday-3';
+          message1 = 'Happy Birthday-1';
+          message2 = 'Happy Birthday-2';
+          message3 = 'Happy Birthday-3';
         }
-
-
         else if (occasion1 === "Anniversary") {
           fileName = "a" + rannum_acard + ".JPG";
           occasionvar = "Anniversaries"; // Fixed typo: "Anniversarys" -> "Anniversaries"
-          const message1 = 'Happy Anniversary-1';
-          const message2 = 'Happy Anniversary-2';
-          const message3 = 'Happy Anniversary-3';
+          message1 = 'Happy Anniversary-1';
+          message2 = 'Happy Anniversary-2';
+          message3 = 'Happy Anniversary-3';
         }
 
         console.log(occasionvar);
+        const messagevar = eval('message' + ran_num);
 
         sendEmail(data.To_Email, messagevar, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName, occasionvar);
       }
