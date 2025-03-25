@@ -73,6 +73,14 @@ async function sendEmails() {
         const message2 ='Happy Birthday-2';
         const message3 ='Happy Birthday-3';
         const messagevar = eval('message' + ran_num);
+        const occasionvar;
+
+       if occasion = 'Birthday'
+       {
+        occasionvar="Birthdays"
+       }
+
+
         // Use ran_num for any specific condition or logic (just an example)
         //if (ran_num === 1) 
        // {
@@ -115,7 +123,7 @@ async function sendEmail(toEmail, message, subject, fromname, toname, fileName) 
         to_name: toname,
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
         email: toEmail, // Send to the recipient email
-        link: `https://taviarora.github.io/eventmarch2025/Birthdays/${fileName}`,
+        link: `https://taviarora.github.io/eventmarch2025/${occasionvar}/${fileName}`,
       },
       {
         publicKey: "qcbXaXrWGMaIRt6_o",
