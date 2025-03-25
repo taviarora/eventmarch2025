@@ -75,7 +75,7 @@ async function sendEmails() {
         const message3 = 'Happy Birthday-3';
         const messagevar = eval('message' + ran_num);
         //const occasionvar='Birthdays';
-        console.log(occasion);
+        console.log(occasion1);
 
         if (occasion1 === "Birthday") {
           const occasionvar = 'Birthdays';
