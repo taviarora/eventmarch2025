@@ -80,7 +80,7 @@ async function sendEmails() {
         var occasionvar;
         var fileName;
         if (occasion1 === "Birthday") {
-          fileName = "b"+ ran_num + ".png";
+          fileName = "b"+ ran_num + ".JPG";
           occasionvar = "Birthdays";
         }
         if (occasion1 === "Anniversary") {
