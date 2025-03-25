@@ -73,12 +73,12 @@ async function sendEmails() {
         const message2 ='Happy Birthday-2';
         const message3 ='Happy Birthday-3';
         const messagevar = eval('message' + ran_num);
-        const occasionvar='Birthdays';
+        const occasionvar;
 
-     // if (occasion == "Birthday")
-     // {
-     // occasionvar='Birthdays';
-     // }
+     if (occasion == "Birthday")
+     {
+     occasionvar='Birthdays';
+     }
 
 
         // Use ran_num for any specific condition or logic (just an example)
