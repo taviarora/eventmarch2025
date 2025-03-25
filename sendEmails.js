@@ -65,6 +65,7 @@ async function sendEmails() {
       if (data.Date === todayFormatted) {
         const fromname = data.From_Name;
         const toname = data.To_Name;
+        const occasion1 = data.Occassion;
 
         const fileName = ran_num + ".png";
         console.log(fileName);
@@ -76,7 +77,7 @@ async function sendEmails() {
         //const occasionvar='Birthdays';
         console.log(occasion);
 
-        if (occasion === "Birthday") {
+        if (occasion1 === "Birthday") {
           const occasionvar = 'Birthdays';
         }
 
