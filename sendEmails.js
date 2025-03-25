@@ -86,6 +86,7 @@ async function sendEmails() {
 
 
         if (occasion1 === "Birthday") 
+        {
         
           {
             fileName = "b" + rannum_bcard + ".JPG";
@@ -103,6 +104,7 @@ async function sendEmails() {
           const message2 = 'Happy Anniversary-2';
           const message3 = 'Happy Anniversary-3';
           }
+        }
 
         console.log(occasionvar);
 
