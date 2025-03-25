@@ -82,6 +82,7 @@ async function sendEmails() {
 
         var occasionvar;
         var fileName;
+        console.log(rannum_bcard);
         if (occasion1 === "Birthday") {
           fileName = "b"+ rannum_bcard + ".JPG";
           occasionvar = "Birthdays";
