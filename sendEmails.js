@@ -69,35 +69,35 @@ async function sendEmails() {
         const fileName = ran_num + ".png";
         console.log(fileName);
         const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
-        const message1 ='Happy Birthday-1';
-        const message2 ='Happy Birthday-2';
-        const message3 ='Happy Birthday-3';
+        const message1 = 'Happy Birthday-1';
+        const message2 = 'Happy Birthday-2';
+        const message3 = 'Happy Birthday-3';
         const messagevar = eval('message' + ran_num);
-        //const occasionvar;
+        //const occasionvar='Birthdays';
+        console.log(occasion);
 
-     if (occasion = "Birthday")
-     {
-      const occasionvar='Birthdays';
-     }
+        if (occasion === "Birthday") {
+          const occasionvar = 'Birthdays';
+        }
 
 
         // Use ran_num for any specific condition or logic (just an example)
         //if (ran_num === 1) 
-       // {
-          // Send email with a custom subject
-       //   sendEmail(data.To_Email, message, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName);
-       // } 
-       // else if (ran_num === 2) 
-       // {
-          // Send a different subject or additional details
+        // {
+        // Send email with a custom subject
+        //   sendEmail(data.To_Email, message, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName);
+        // } 
+        // else if (ran_num === 2) 
+        // {
+        // Send a different subject or additional details
         //  sendEmail(data.To_Email, message, `Celebrating ${data.Occasion}!`, fromname, toname, fileName);
-       // } 
-       // else 
+        // } 
+        // else 
         //{
-          // Default message or subject
+        // Default message or subject
         //  sendEmail(data.To_Email, message, `Cheers for ${data.Occasion}!`, fromname, toname, fileName);
         //}
-        
+
         sendEmail(data.To_Email, messagevar, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName);
       }
     });
@@ -124,7 +124,7 @@ async function sendEmail(toEmail, message, subject, fromname, toname, fileName) 
         from_email: "tpsarora@gmail.com", // Hardcoded sender's email
         email: toEmail, // Send to the recipient email
         link: `https://taviarora.github.io/eventmarch2025/${occasionvar}/${fileName}`,
-       // link: `https://taviarora.github.io/eventmarch2025/Birthdays/${fileName}`,
+        // link: `https://taviarora.github.io/eventmarch2025/Birthdays/${fileName}`,
       },
       {
         publicKey: "qcbXaXrWGMaIRt6_o",
