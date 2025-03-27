@@ -145,7 +145,7 @@ async function sendEmails() {
           console.log(occasion1);
           fileName = "reminder" + ".JPG";
           occasionvar = "Reminders"; 
-          rannum_bm=50;
+         // rannum_bm=50;
         }
 
         console.log(occasionvar);
