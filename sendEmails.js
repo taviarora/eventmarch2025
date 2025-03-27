@@ -144,7 +144,7 @@ async function sendEmails() {
         else if (occasion1 === "Reminder") 
         {
           console.log(occasion1);
-          fileName = "reminder" + ".JPG";
+          fileName = "reminder" + ".jpg";
           occasionvar = "Reminders"; 
           rannum_bm=50;
           message50 = data.Reminder_Message;
