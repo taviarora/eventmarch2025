@@ -89,7 +89,8 @@ async function sendEmails() {
 
         var message1, message2, message3,message4, message5, message6,message7, message8, message9,message10, message11, message12,message13, message14, message15,message16, message17, message18,message19, message20, message50;
 
-        if (occasion1 === "Birthday") {
+        if (occasion1 === "Birthday") 
+          {
           fileName = "b" + rannum_bcard + ".JPG";
           occasionvar = "Birthdays";
           message1 = "Wishing you a day filled with love, laughter, and joy. Happy Birthday!";
@@ -113,7 +114,8 @@ async function sendEmails() {
           message19 = "Sending you all my love on your birthday. May you have the best day ever!";
           message20 = "Happy Birthday to a true gem! Keep shining and spreading your positivity everywhere you go.";
         }
-        else if (occasion1 === "Anniversary") {
+        else if (occasion1 === "Anniversary") 
+          {
           fileName = "a" + rannum_acard + ".JPG";
           occasionvar = "Anniversaries"; // Fixed typo: "Anniversarys" -> "Anniversaries"
           message1 = "Happy Anniversary to a wonderful couple! Wishing you many more years of love and happiness.";
@@ -140,6 +142,7 @@ async function sendEmails() {
         }
         else if (occasion1 === "Reminder") 
         {
+          console.log(occasion1);
           fileName = "reminder" + ".JPG";
           occasionvar = "Reminders"; 
           rannum_bm=50;
