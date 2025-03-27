@@ -55,7 +55,7 @@ async function sendEmails() {
   //const rannum_am = Math.floor(Math.random() * 20) + 1;
  // console.log("Random number generated: ", rannum_am);
 
-  const rannum_bm = Math.floor(Math.random() * 20) + 1;
+  var rannum_bm = Math.floor(Math.random() * 20) + 1;
   console.log("Random number generated: ", rannum_bm);
 
   const rannum_bcard = Math.floor(Math.random() * 44) + 1;
@@ -76,6 +76,7 @@ async function sendEmails() {
         const fromname = data.From_Name;
         const toname = data.To_Name;
         const occasion1 = data.Occasion;
+        const rem_mes = data.Reminder_Message;
 
 
         console.log(fileName);
@@ -145,7 +146,9 @@ async function sendEmails() {
           console.log(occasion1);
           fileName = "reminder" + ".JPG";
           occasionvar = "Reminders"; 
-         // rannum_bm=50;
+          rannum_bm=50;
+          message50 = data.Reminder_Message;
+          
         }
 
         console.log(occasionvar);
