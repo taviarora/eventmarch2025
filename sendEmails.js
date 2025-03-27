@@ -87,7 +87,7 @@ async function sendEmails() {
         var fileName;
         console.log(rannum_bcard);
 
-        var message1, message2, message3;
+        var message1, message2, message3,message4, message5, message6,message7, message8, message9,message10, message11, message12,message13, message14, message15,message16, message17, message18,message19, message20, message50;
 
         if (occasion1 === "Birthday") {
           fileName = "b" + rannum_bcard + ".JPG";
@@ -137,6 +137,12 @@ async function sendEmails() {
           message19 = "Happy Anniversary to the couple who has made love, laughter, and happiness a way of life. Here to many more years of amazing adventures together!";
           message20 = "To a love that has stood the test of time, Happy Anniversary! I wish you both endless joy and more years of happiness ahead.";
 
+        }
+        else if (occasion1 === "Reminder") 
+        {
+          fileName = "reminder" + ".JPG";
+          occasionvar = "Reminders"; 
+          rannum_bm=50;
         }
 
         console.log(occasionvar);
