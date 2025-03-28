@@ -149,7 +149,7 @@ async function sendEmails() {
           occasionvar = "Reminders"; 
           rannum_bm=50;
           message50 = data.Reminder_Message;
-          var subject1 = data.Occasion + message50;
+          var subject1 = data.Occasion + '-'+ message50;
         }
 
         console.log(occasionvar);
