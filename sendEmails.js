@@ -74,7 +74,7 @@ async function sendEmails() {
       console.log("Data: ", JSON.stringify(data, null, 2));
       if (data.Date === todayFormatted) {
         const fromname = data.From_Name;
-        const toname = data.To_Name;
+        const toname = data.To_Gname;
         const occasion1 = data.Occasion;
         const rem_mes = data.Reminder_Message;
 
@@ -114,7 +114,7 @@ async function sendEmails() {
           message18 = "Another year of greatness! Wishing you the most amazing birthday and year ahead.";
           message19 = "Sending you all my love on your birthday. May you have the best day ever!";
           message20 = "Happy Birthday to a true gem! Keep shining and spreading your positivity everywhere you go.";
-          var subject1 = `Happy ${data.Occasion}!`;
+          var subject1 = `Happy ${data.Occasion}!`+ '-'+ toname;
         }
         else if (occasion1 === "Anniversary") 
           {
@@ -140,7 +140,7 @@ async function sendEmails() {
           message18 = "May your love story continue to be written with beautiful chapters and happy memories. Wishing you both a very Happy Anniversary!";
           message19 = "Happy Anniversary to the couple who has made love, laughter, and happiness a way of life. Here to many more years of amazing adventures together!";
           message20 = "To a love that has stood the test of time, Happy Anniversary! I wish you both endless joy and more years of happiness ahead.";
-          var subject1 = `Happy ${data.Occasion}!`;
+          var subject1 = `Happy ${data.Occasion}!`+ '-'+ toname;
         }
         else if (occasion1 === "Reminder") 
         {
