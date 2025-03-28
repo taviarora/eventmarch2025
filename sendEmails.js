@@ -58,10 +58,10 @@ async function sendEmails() {
   var rannum_bm = Math.floor(Math.random() * 20) + 1;
   console.log("Random number generated: ", rannum_bm);
 
-  const rannum_bcard = Math.floor(Math.random() * 43) + 1;
+  const rannum_bcard = Math.floor(Math.random() * 44) + 1;
   console.log("Random number generated: ", rannum_bcard);
 
-  const rannum_acard = Math.floor(Math.random() * 12) + 1;
+  const rannum_acard = Math.floor(Math.random() * 13) + 1;
   console.log("Random number generated: ", rannum_acard);
 
   try {
