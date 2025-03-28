@@ -114,6 +114,7 @@ async function sendEmails() {
           message18 = "Another year of greatness! Wishing you the most amazing birthday and year ahead.";
           message19 = "Sending you all my love on your birthday. May you have the best day ever!";
           message20 = "Happy Birthday to a true gem! Keep shining and spreading your positivity everywhere you go.";
+          var subject1 = `Happy ${data.Occasion}!`;
         }
         else if (occasion1 === "Anniversary") 
           {
@@ -139,7 +140,7 @@ async function sendEmails() {
           message18 = "May your love story continue to be written with beautiful chapters and happy memories. Wishing you both a very Happy Anniversary!";
           message19 = "Happy Anniversary to the couple who has made love, laughter, and happiness a way of life. Here to many more years of amazing adventures together!";
           message20 = "To a love that has stood the test of time, Happy Anniversary! I wish you both endless joy and more years of happiness ahead.";
-
+          var subject1 = `Happy ${data.Occasion}!`;
         }
         else if (occasion1 === "Reminder") 
         {
@@ -148,13 +149,13 @@ async function sendEmails() {
           occasionvar = "Reminders"; 
           rannum_bm=50;
           message50 = data.Reminder_Message;
-          
+          var subject1 = data.Occasion + message50;
         }
 
         console.log(occasionvar);
         const messagevar = eval('message' + rannum_bm);
 
-        sendEmail(data.To_Email, messagevar, `Special Occasion: Happy ${data.Occasion}!`, fromname, toname, fileName, occasionvar);
+        sendEmail(data.To_Email, messagevar, subject1, fromname, toname, fileName, occasionvar);
       }
     });
   } catch (error) {
