@@ -69,22 +69,22 @@ async function sendEmails() {
     snapshot.forEach((doc) => {
       const data = doc.data();
       console.log("Data: ", JSON.stringify(data, null, 2));
-    
+
       // Assuming data.Date is in the format "yyyy-mm-dd"
       const dataDate = data.Date;  // e.g., "2026-04-05"
-    
+
       // Split the dates into year, month, and day
       const [dataYear, dataMonth, dataDay] = dataDate.split('-');
-    
+
       const today = new Date();
       const todayFormatted = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}`;
       const [todayDay, todayMonth] = todayFormatted.split('-');
-    
+
       console.log("dataDay:", dataDay);
       console.log("todayDay:", todayDay);
       console.log("dataMonth:", dataMonth);
       console.log("todayMonth:", todayMonth);
-    
+
       // Compare only the day and month
       if (dataDay === todayDay && dataMonth === todayMonth) {
         console.log("Found matching date:", data);
@@ -170,11 +170,35 @@ async function sendEmails() {
         const messagevar = eval('message' + rannum_bm);
 
         sendEmail(data.To_Email, messagevar, subject1, fromname, toname, fileName, occasionvar);
+        sendWhatsappMsg();
       }
     });
   } catch (error) {
     console.error("Error fetching events:", error);
   }
+}
+
+async function sendWhatsappMsg() {
+  const encodedSid = 'QUJlMjFmOTg3ZGQ5M2YzMThhOTg5MTFlYjQ4Mg==';
+  const encodedToken = 'YjJjNTRhYTJjNWU2Y2JmMmNhY2EzM2EwOTRkY2RlM2Rl';
+  
+  // Decode from base64
+  const Sid = Buffer.from(encodedSid, 'base64').toString('utf-8');
+  const t = Buffer.from(encodedToken, 'base64').toString('utf-8');
+  
+  console.log('Decoded SID:', Sid);
+  console.log('Decoded Token:', t);
+  const client = require('twilio')(Sid, t);
+  // const client = new twilio(accountSid, authToken);
+
+
+  client.messages.create({
+    body: message,
+    from: 'whatsapp:+14155238886',  // Twilio WhatsApp number
+    to: `whatsapp:${to}`            // Recipient's WhatsApp number (include country code)
+  })
+  .then((message) => console.log("Message sent with SID:", message.sid))
+  .catch((error) => console.error("Error sending message:", error));
 }
 
 async function sendEmail(toEmail, message, subject, fromname, toname, fileName, occasionvar) {
