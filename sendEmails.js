@@ -1,15 +1,9 @@
 ﻿const admin = require("firebase-admin");
-//global.location = { protocol: 'http:' };
-
-//const emailjs = require("@emailjs/browser");
-//const emailjs = require("emailjs-com");
 const emailjs = require("@emailjs/nodejs");
 
 require("dotenv").config(); // Load environment variables from .env file
 
 // Load Firebase service account key from environment variable
-// console.log("Printing env ",process.env);
-// console.log("Printing env ",process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
 const serviceAccountKey = Buffer.from(
   process.env.FIREBASE_SERVICE_ACCOUNT_KEY,
   "base64"
@@ -43,14 +37,6 @@ const db = admin.firestore();
 async function sendEmails() {
   console.log("Sending emails...");
 
-  // const today = new Date();
-  // const indiaTimeOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
-  //const indiaTime = new Date(today.getTime() + indiaTimeOffset);
-  // const todayFormatted = indiaTime.toISOString().split("T")[0];
-
-  //  console.log("India Date:", todayFormatted);
-
-
   const today = new Date();
   const indiaTimeOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
   const indiaTime = new Date(today.getTime() + indiaTimeOffset);
@@ -80,14 +66,6 @@ async function sendEmails() {
   try {
     const snapshot = await db.collection("Event").get();
 
-    console.log("Snapshot: ", JSON.stringify(snapshot, null, 2));
-
-    //  snapshot.forEach((doc) => {
-    //    const data = doc.data();
-    //    console.log("Data: ", JSON.stringify(data, null, 2));
-    //    if (data.Date === todayFormatted) 
-
-
     snapshot.forEach((doc) => {
       const data = doc.data();
       console.log("Data: ", JSON.stringify(data, null, 2));
@@ -109,21 +87,6 @@ async function sendEmails() {
     
       // Compare only the day and month
       if (dataDay === todayDay && dataMonth === todayMonth) {
-    
-
-    // snapshot.forEach((doc) => {
-    //   const data = doc.data();
-    //   console.log("Data: ", JSON.stringify(data, null, 2));
-
-    //   // Assuming data.Date is in "dd-mm" format or needs to be extracted in that format
-    //   const dataDate = data.Date;  // e.g., "05-04" (dd-mm format)
-
-    //   // Split the dates into day and month
-    //   const [dataDay, dataMonth] = dataDate.split('-');
-    //   const [todayDay, todayMonth] = todayFormatted.split('-');
-
-      // // Compare only the day and month
-      // if (dataDay === todayDay && dataMonth === todayMonth) {
         console.log("Found matching date:", data);
         // Do something when the dates match
 
