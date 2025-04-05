@@ -43,12 +43,25 @@ const db = admin.firestore();
 async function sendEmails() {
   console.log("Sending emails...");
 
-  const today = new Date();
-  const indiaTimeOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
-  const indiaTime = new Date(today.getTime() + indiaTimeOffset);
-  const todayFormatted = indiaTime.toISOString().split("T")[0];
+// const today = new Date();
+// const indiaTimeOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+//const indiaTime = new Date(today.getTime() + indiaTimeOffset);
+// const todayFormatted = indiaTime.toISOString().split("T")[0];
 
-  console.log("India Date:", todayFormatted);
+//  console.log("India Date:", todayFormatted);
+
+
+const today = new Date();
+const indiaTimeOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+const indiaTime = new Date(today.getTime() + indiaTimeOffset);
+
+// Extract the date components (day and month)
+const day = indiaTime.getUTCDate().toString().padStart(2, '0');
+const month = (indiaTime.getUTCMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
+
+const todayFormatted = `${day}-${month}`;
+
+console.log("India Date (dd-mm):", todayFormatted);
 
   // Generate a random number between 1 and 3
   
@@ -69,10 +82,28 @@ async function sendEmails() {
 
     console.log("Snapshot: ", JSON.stringify(snapshot, null, 2));
 
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      console.log("Data: ", JSON.stringify(data, null, 2));
-      if (data.Date === todayFormatted) {
+  //  snapshot.forEach((doc) => {
+  //    const data = doc.data();
+  //    console.log("Data: ", JSON.stringify(data, null, 2));
+  //    if (data.Date === todayFormatted) 
+        
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          console.log("Data: ", JSON.stringify(data, null, 2));
+        
+          // Assuming data.Date is in "dd-mm" format or needs to be extracted in that format
+          const dataDate = data.Date;  // e.g., "05-04" (dd-mm format)
+        
+          // Split the dates into day and month
+          const [dataDay, dataMonth] = dataDate.split('-');
+          const [todayDay, todayMonth] = todayFormatted.split('-');
+        
+          // Compare only the day and month
+          if (dataDay === todayDay && dataMonth === todayMonth) 
+            {
+            console.log("Found matching date:", data);
+            // Do something when the dates match
+         
         const fromname = data.From_Name;
         const toname = data.To_Gname;
         const occasion1 = data.Occasion;
