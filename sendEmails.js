@@ -43,30 +43,30 @@ const db = admin.firestore();
 async function sendEmails() {
   console.log("Sending emails...");
 
-// const today = new Date();
-// const indiaTimeOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
-//const indiaTime = new Date(today.getTime() + indiaTimeOffset);
-// const todayFormatted = indiaTime.toISOString().split("T")[0];
+  // const today = new Date();
+  // const indiaTimeOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+  //const indiaTime = new Date(today.getTime() + indiaTimeOffset);
+  // const todayFormatted = indiaTime.toISOString().split("T")[0];
 
-//  console.log("India Date:", todayFormatted);
+  //  console.log("India Date:", todayFormatted);
 
 
-const today = new Date();
-const indiaTimeOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
-const indiaTime = new Date(today.getTime() + indiaTimeOffset);
+  const today = new Date();
+  const indiaTimeOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+  const indiaTime = new Date(today.getTime() + indiaTimeOffset);
 
-// Extract the date components (day and month)
-const day = indiaTime.getUTCDate().toString().padStart(2, '0');
-const month = (indiaTime.getUTCMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
+  // Extract the date components (day and month)
+  const day = indiaTime.getUTCDate().toString().padStart(2, '0');
+  const month = (indiaTime.getUTCMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
 
-const todayFormatted = `${day}-${month}`;
+  const todayFormatted = `${day}-${month}`;
 
-console.log("India Date (dd-mm):", todayFormatted);
+  console.log("India Date (dd-mm):", todayFormatted);
 
   // Generate a random number between 1 and 3
-  
+
   //const rannum_am = Math.floor(Math.random() * 20) + 1;
- // console.log("Random number generated: ", rannum_am);
+  // console.log("Random number generated: ", rannum_am);
 
   var rannum_bm = Math.floor(Math.random() * 20) + 1;
   console.log("Random number generated: ", rannum_bm);
@@ -82,28 +82,51 @@ console.log("India Date (dd-mm):", todayFormatted);
 
     console.log("Snapshot: ", JSON.stringify(snapshot, null, 2));
 
-  //  snapshot.forEach((doc) => {
-  //    const data = doc.data();
-  //    console.log("Data: ", JSON.stringify(data, null, 2));
-  //    if (data.Date === todayFormatted) 
-        
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          console.log("Data: ", JSON.stringify(data, null, 2));
-        
-          // Assuming data.Date is in "dd-mm" format or needs to be extracted in that format
-          const dataDate = data.Date;  // e.g., "05-04" (dd-mm format)
-        
-          // Split the dates into day and month
-          const [dataDay, dataMonth] = dataDate.split('-');
-          const [todayDay, todayMonth] = todayFormatted.split('-');
-        
-          // Compare only the day and month
-          if (dataDay === todayDay && dataMonth === todayMonth) 
-            {
-            console.log("Found matching date:", data);
-            // Do something when the dates match
-         
+    //  snapshot.forEach((doc) => {
+    //    const data = doc.data();
+    //    console.log("Data: ", JSON.stringify(data, null, 2));
+    //    if (data.Date === todayFormatted) 
+
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      console.log("Data: ", JSON.stringify(data, null, 2));
+    
+      // Assuming data.Date is in the format "yyyy-mm-dd"
+      const dataDate = data.Date;  // e.g., "2026-04-05"
+    
+      // Split the dates into year, month, and day
+      const [dataYear, dataMonth, dataDay] = dataDate.split('-');
+    
+      const today = new Date();
+      const todayFormatted = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+      const [todayDay, todayMonth] = todayFormatted.split('-');
+    
+      console.log("dataDay:", dataDay);
+      console.log("todayDay:", todayDay);
+      console.log("dataMonth:", dataMonth);
+      console.log("todayMonth:", todayMonth);
+    
+      // Compare only the day and month
+      if (dataDay === todayDay && dataMonth === todayMonth) {
+    
+
+    // snapshot.forEach((doc) => {
+    //   const data = doc.data();
+    //   console.log("Data: ", JSON.stringify(data, null, 2));
+
+    //   // Assuming data.Date is in "dd-mm" format or needs to be extracted in that format
+    //   const dataDate = data.Date;  // e.g., "05-04" (dd-mm format)
+
+    //   // Split the dates into day and month
+    //   const [dataDay, dataMonth] = dataDate.split('-');
+    //   const [todayDay, todayMonth] = todayFormatted.split('-');
+
+      // // Compare only the day and month
+      // if (dataDay === todayDay && dataMonth === todayMonth) {
+        console.log("Found matching date:", data);
+        // Do something when the dates match
+
         const fromname = data.From_Name;
         const toname = data.To_Gname;
         const occasion1 = data.Occasion;
@@ -119,10 +142,9 @@ console.log("India Date (dd-mm):", todayFormatted);
         var fileName;
         console.log(rannum_bcard);
 
-        var message1, message2, message3,message4, message5, message6,message7, message8, message9,message10, message11, message12,message13, message14, message15,message16, message17, message18,message19, message20, message50;
+        var message1, message2, message3, message4, message5, message6, message7, message8, message9, message10, message11, message12, message13, message14, message15, message16, message17, message18, message19, message20, message50;
 
-        if (occasion1 === "Birthday") 
-          {
+        if (occasion1 === "Birthday") {
           fileName = "b" + rannum_bcard + ".JPG";
           occasionvar = "Birthdays";
           message1 = "Wishing you a day filled with love, laughter, and joy. Happy Birthday!";
@@ -145,10 +167,9 @@ console.log("India Date (dd-mm):", todayFormatted);
           message18 = "Another year of greatness! Wishing you the most amazing birthday and year ahead.";
           message19 = "Sending you all my love on your birthday. May you have the best day ever!";
           message20 = "Happy Birthday to a true gem! Keep shining and spreading your positivity everywhere you go.";
-          var subject1 = `Happy ${data.Occasion}!`+ '-'+ toname;
+          var subject1 = `Happy ${data.Occasion}!` + '-' + toname;
         }
-        else if (occasion1 === "Anniversary") 
-          {
+        else if (occasion1 === "Anniversary") {
           fileName = "a" + rannum_acard + ".JPG";
           occasionvar = "Anniversaries"; // Fixed typo: "Anniversarys" -> "Anniversaries"
           message1 = "Happy Anniversary to a wonderful couple! Wishing you many more years of love and happiness.";
@@ -171,16 +192,15 @@ console.log("India Date (dd-mm):", todayFormatted);
           message18 = "May your love story continue to be written with beautiful chapters and happy memories. Wishing you both a very Happy Anniversary!";
           message19 = "Happy Anniversary to the couple who has made love, laughter, and happiness a way of life. Here to many more years of amazing adventures together!";
           message20 = "To a love that has stood the test of time, Happy Anniversary! I wish you both endless joy and more years of happiness ahead.";
-          var subject1 = `Happy ${data.Occasion}!`+ '-'+ toname;
+          var subject1 = `Happy ${data.Occasion}!` + '-' + toname;
         }
-        else if (occasion1 === "Reminder") 
-        {
+        else if (occasion1 === "Reminder") {
           console.log(occasion1);
           fileName = "reminder" + ".jpg";
-          occasionvar = "Reminders"; 
-          rannum_bm=50;
+          occasionvar = "Reminders";
+          rannum_bm = 50;
           message50 = data.Reminder_Message;
-          var subject1 = data.Occasion + '-'+ message50;
+          var subject1 = data.Occasion + '-' + message50;
         }
 
         console.log(occasionvar);
