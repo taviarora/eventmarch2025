@@ -57,6 +57,14 @@
             color: green;
         }
 
+        .filter-container {
+            margin-bottom: 20px;
+        }
+
+        .filter-container select {
+            padding: 5px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 
@@ -64,6 +72,15 @@
     <div class="container">
         <h1>Event Management</h1>
         <div id="messageArea"></div>
+
+        <!-- Occasion Filter -->
+        <div class="filter-container">
+            <label for="occasionFilter">Filter by Occasion:</label>
+            <select id="occasionFilter">
+                <option value="">All Occasions</option>
+                <!-- Dynamic options will be populated here -->
+            </select>
+        </div>
 
         <h3>Event List</h3>
         <table id="eventTable">
@@ -103,9 +120,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        let selectedOccasion = "";
+
         // Function to get all events
         async function getEvent() {
             const eventList = document.getElementById("eventList");
+            const occasionFilter = document.getElementById("occasionFilter");
             eventList.innerHTML = "";
 
             const eventCollection = collection(db, "Event");
@@ -114,14 +134,15 @@
                 if (snapshot.empty) {
                     eventList.innerHTML = "<tr><td colspan='10'>No Events found.</td></tr>";
                 } else {
-                    const sortedDocs = snapshot.docs.sort((a, b) => {
-                        const eventA = a.data();
-                        const eventB = b.data();
-                        return eventA.SNo - eventB.SNo; // Ascending order of SNo
-                    });
+                    // Filter events based on the selected Occasion
+                    const events = snapshot.docs.map(doc => doc.data());
+                    const filteredEvents = selectedOccasion
+                        ? events.filter(event => event.Occasion === selectedOccasion)
+                        : events;
 
-                    sortedDocs.forEach(doc => {
-                        const eventData = doc.data();
+                    const sortedDocs = filteredEvents.sort((a, b) => a.SNo - b.SNo);
+
+                    sortedDocs.forEach(eventData => {
                         const row = document.createElement("tr");
 
                         row.innerHTML = `
@@ -145,10 +166,43 @@
             }
         }
 
-        // Initialize by fetching events
+        // Function to populate Occasion Filter
+        async function populateOccasionFilter() {
+            const occasionFilter = document.getElementById("occasionFilter");
+            const eventCollection = collection(db, "Event");
+            try {
+                const snapshot = await getDocs(eventCollection);
+                const occasions = new Set();
+                snapshot.docs.forEach(doc => {
+                    const occasion = doc.data().Occasion;
+                    occasions.add(occasion);
+                });
+
+                // Add all unique occasions to the filter dropdown
+                occasions.forEach(occasion => {
+                    const option = document.createElement("option");
+                    option.value = occasion;
+                    option.textContent = occasion;
+                    occasionFilter.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Error getting occasions:", error);
+            }
+        }
+
+        // Event listener for the Occasion filter
+        document.getElementById("occasionFilter").addEventListener("change", (e) => {
+            selectedOccasion = e.target.value;
+            getEvent();  // Refresh the events based on selected filter
+        });
+
+        // Initialize by fetching events and populating Occasion filter
+        populateOccasionFilter();
         getEvent();
+
     </script>
 </body>
 
 </html>
+
 
