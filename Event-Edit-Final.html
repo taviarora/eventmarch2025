@@ -158,6 +158,33 @@
                     <option value="Reminder">Reminder</option>
                 </select>
                 <br>
+                
+                <label for="Reminder_Message">Reminder Message:</label>
+                <Input type="text" id="Reminder_Message" required>
+                <br>
+
+                <label for="Recurring">Recurring:</label>
+                <select id="Recurring" required>
+                        <br>
+                        <option value="">Recurring</option>
+                        <option value="Yearly">Yearly</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Weekly">Weekly</option>
+                    </select>
+                <br>
+
+                <label for="Relation">Recurring:</label>
+                <select id="Relation" required>
+                        <br>
+                        <option value="">Relation</option>
+                        <option value="Father">Father</option>
+                        <option value="Mother">Mother</option>
+                        <option value="Brother">Brother</option>
+                        <option value="Sister">Sister</option>
+                        <option value="Son">Brother</option>
+                        <option value="daughter">Brother</option>
+                    </select>
+                <br>
                 <label for="Date">Date:</label>
                 <input type="date" id="Date" required>
             </div>
@@ -177,6 +204,9 @@
                     <th>To Email</th> 
                     <th>To Mobile</th> 
                     <th>Occasion</th>
+                    <th>Relation</th>
+                    <th>Recurring</th>
+                    <th>Reminder_Message</th>
                     <th>Date</th> 
                     <th>Actions</th> 
                 </tr>
@@ -243,6 +273,9 @@
                             <td>${eventData.To_Email}</td>
                             <td>${eventData.To_Mobile}</td>
                             <td>${eventData.Occasion}</td>
+                            <td>${eventData.Relation}</td>
+                            <td>${eventData.Recurring}</td>
+                            <td>${eventData.Reminder_Message}</td>
                             <td>${eventData.Date}</td>
                             <td>
                                 <button onclick="editEvent('${doc.id}', '${encodeURIComponent(JSON.stringify(eventData))}')">Edit</button>
@@ -279,6 +312,9 @@
             const To_Email1 = document.getElementById("To_Email").value;
             const To_Mobile1 = document.getElementById("To_Mobile").value;
             const OccasionType = document.getElementById("Occasion").value;
+            const Relation1 = document.getElementById("Relation").value;
+            const Recurring1 = document.getElementById("Recurring").value;
+            const Reminder_Message1 = document.getElementById("Reminder_Message").value;
             const date = document.getElementById("Date").value;
 
             if (currentDocId) {
@@ -294,6 +330,9 @@
                         To_Email: To_Email1,
                         To_Mobile: To_Mobile1,
                         Occasion: OccasionType,
+                        Relation = Relation1,
+                        Recurring =Recurring1.
+                        Reminder_Message: Reminder_Message1
                         Date: date
                     });
 
