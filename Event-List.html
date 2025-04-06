@@ -166,7 +166,15 @@
                         return matchesOccasion && matchesMonth;
                     });
 
-                    const sortedDocs = filteredEvents.sort((a, b) => a.SNo - b.SNo);
+                    // Sort events by Date first, then by From_Name
+                    const sortedDocs = filteredEvents.sort((a, b) => {
+                        const dateA = new Date(a.Date);
+                        const dateB = new Date(b.Date);
+                        if (dateA.getTime() !== dateB.getTime()) {
+                            return dateA - dateB; // Sort by date in ascending order
+                        }
+                        return a.From_Name.localeCompare(b.From_Name); // If dates are equal, sort by From_Name
+                    });
 
                     sortedDocs.forEach(eventData => {
                         const row = document.createElement("tr");
@@ -236,6 +244,7 @@
 </body>
 
 </html>
+
 
 
 

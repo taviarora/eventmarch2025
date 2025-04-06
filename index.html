@@ -54,8 +54,10 @@
         <div class="message" id="messageArea"></div>
   
         <button onclick="AddEventsButton()">Add Event</button>
+        <br>
         <button onclick="ModifytableButton()">Modify Table Fields</button>
-
+        <br>
+        <button onclick="ListData()">List Data</button>
 </div>
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -69,7 +71,10 @@
         window.open('Event-Table-Edit_1.html'); // This opens a new HTML page
         // or use: window.location.href = 'new_page.html'; // This redirects to the new page
          }
-
+         function ListData() {
+        window.open('Event-List.html'); // This opens a new HTML page
+        // or use: window.location.href = 'new_page.html'; // This redirects to the new page
+         }
          
         function SendEmail() {
         window.open('sendEmails.js'); // This opens a new HTML page
