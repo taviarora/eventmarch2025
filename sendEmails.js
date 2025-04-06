@@ -214,32 +214,37 @@ async function sendEmails() {
   }
 }
 
-async function sendWhatsappMsg() 
-{
+aconst twilio = require('twilio');
+
+async function sendWhatsappMsg(message, to) {
     const encodedSid = 'QUJlMjFmOTg3ZGQ5M2YzMThhOTg5MTFlYjQ4Mg==';
     const encodedToken = 'YjJjNTRhYTJjNWU2Y2JmMmNhY2EzM2EwOTRkY2RlM2Rl';
   
-    //Decode from base64
+    // Decode from base64
     const Sid = Buffer.from(encodedSid, 'base64').toString('utf-8');
     const t = Buffer.from(encodedToken, 'base64').toString('utf-8');
   
     console.log('Decoded SID:', Sid);
     console.log('Decoded Token:', t);
-    const client = require('twilio')(Sid, t);
-    const client = new twilio(accountSid, authToken);
 
+    // Create Twilio client
+    const client = new twilio(Sid, t);
 
-    client.messages.create
-    (
-      {
-        body: message,
-        from: 'whatsapp:+14155238886',  // Twilio WhatsApp number
-        to: `whatsapp:${to}`            // Recipient's WhatsApp number (include country code)
-      }
-    )
-    .then((message) => console.log("Message sent with SID:", message.sid))
-    .catch((error) => console.error("Error sending message:", error));
+    try {
+        const messageSent = await client.messages.create({
+            body: message,
+            from: 'whatsapp:+14155238886',  // Twilio WhatsApp number
+            to: `whatsapp:${to}`            // Recipient's WhatsApp number (include country code)
+        });
+        console.log("Message sent with SID:", messageSent.sid);
+    } catch (error) {
+        console.error("Error sending message:", error);
+    }
 }
+
+// Example usage:
+sendWhatsappMsg('Hello, this is a test message!', '+1234567890');
+
 
 async function sendEmail(toEmail, message, subject, fromname, toname, fileName, occasionvar) {
   try {
