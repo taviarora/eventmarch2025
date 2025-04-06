@@ -330,9 +330,9 @@
                         To_Email: To_Email1,
                         To_Mobile: To_Mobile1,
                         Occasion: OccasionType,
-                        Relation = Relation1,
-                        Recurring =Recurring1.
-                        Reminder_Message: Reminder_Message1
+                        Relation: Relation1,
+                        Recurring: Recurring1,
+                        Reminder_Message: Reminder_Message1,
                         Date: date
                     });
 
@@ -362,6 +362,9 @@
                         To_Email: To_Email1,
                         To_Mobile: To_Mobile1,
                         Occasion: OccasionType,
+                        Relation: Relation1,
+                        Recurring: Recurring1,
+                        Reminder_Message: Reminder_Message1,
                         Date: date
                     });
 
@@ -404,6 +407,9 @@
             document.getElementById("To_Email").value = eventData.To_Email;
             document.getElementById("To_Mobile").value = eventData.To_Mobile;
             document.getElementById("Occasion").value = eventData.Occasion;
+            document.getElementById("Relation").value = eventData.Relation;
+            document.getElementById("Recurring").value = eventData.Recurring;
+            document.getElementById("Reminder_Message").value = eventData.Reminder_Message;
             document.getElementById("Date").value = eventData.Date;
 
             // Change button text to 'Update Event'
