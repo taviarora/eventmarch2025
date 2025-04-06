@@ -50,21 +50,42 @@
             color: white;
         }
 
-        table th
+        
+
+        table th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+    
+
+        /* Add some spacing for each field label */
+        td span {
+            font-weight: bold;
+        }
+       table th
         {
         white-space: nowrap;
         line-height: 1.5;
+        background-color: #f2f2f2;
+        text-align: left;
     }
         table td {
             padding: 10px;
             text-align: left;
             border: 1px solid white;
-            display: block;
+            display: block; /* This makes each td behave like a block-level element */
+            width: 100%; /* Make sure it takes up full width */
         }
         table tr 
         {
-        display: block;
+            display: block; /* Make each row stack vertically */
+            margin-bottom: 20px; /* Add spacing between events */
          }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
        
     table td {
             color: white;
