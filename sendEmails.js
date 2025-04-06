@@ -214,7 +214,7 @@ async function sendEmails() {
   }
 }
 
-aconst twilio = require('twilio');
+const twilio = require('twilio');
 
 async function sendWhatsappMsg(message, to) {
     const encodedSid = 'QUJlMjFmOTg3ZGQ5M2YzMThhOTg5MTFlYjQ4Mg==';
