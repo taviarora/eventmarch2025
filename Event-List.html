@@ -12,23 +12,9 @@
             color: #333;
         }
 
-       
         label {
             margin-right: 10px;
             width: 150px;
-        }
-       
-        button {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: maroon;
-            color: white;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: darkred;
         }
 
         table {
@@ -38,44 +24,38 @@
             color: white;
         }
 
-        table th, td {
+        table th,
+        td {
             padding: 8px;
             border: 1px solid #ddd;
         }
 
-    
-
-        /* Add some spacing for each field label */
         td span {
             font-weight: bold;
         }
-       table th
-        {
-        white-space: nowrap;
-        line-height: 1.5;
-        background-color: #6c0202;
-        text-align: left;
-    }
+
+        table th {
+            white-space: nowrap;
+            line-height: 1.5;
+            background-color: #6c0202;
+            text-align: left;
+        }
+
         table td {
             padding: 10px;
             text-align: left;
             border: 1px solid white;
-           
-            width: 100%; /* Make sure it takes up full width */
+            width: 100%;
         }
-        table tr 
-        {
-            margin-bottom: 20px; /* Add spacing between events */
-         }
 
-             
-    
+        table tr {
+            margin-bottom: 20px;
+        }
 
         #messageArea {
             margin: 10px 0;
             color: green;
         }
-
 
     </style>
 </head>
@@ -89,17 +69,16 @@
         <table id="eventTable">
             <thead>
                 <tr>
-                    <th>Serial Number</th> 
-                    <th>From Name</th> 
+                    <th>Serial Number</th>
+                    <th>From Name</th>
                     <th>From Email</th>
-                    <th>From Mobile</th> 
-                    <th>To Name</th>   
-                    <th>Greet Name</th> 
-                    <th>To Email</th> 
-                    <th>To Mobile</th> 
+                    <th>From Mobile</th>
+                    <th>To Name</th>
+                    <th>Greet Name</th>
+                    <th>To Email</th>
+                    <th>To Mobile</th>
                     <th>Occasion</th>
-                    <th>Date</th> 
-                    <th>Actions</th> 
+                    <th>Date</th>
                 </tr>
             </thead>
             <tbody id="eventList"></tbody>
@@ -108,7 +87,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCfbqC-893YBqhgR5OR0eHyX-EXzCIoTC8",
@@ -123,8 +102,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
-        let currentDocId = null; // Track the current document ID for editing
 
         // Function to get all events
         async function getEvent() {
@@ -158,10 +135,6 @@
                             <td>${eventData.To_Mobile}</td>
                             <td>${eventData.Occasion}</td>
                             <td>${eventData.Date}</td>
-                            <td>
-                                <button onclick="editEvent('${doc.id}', '${encodeURIComponent(JSON.stringify(eventData))}')">Edit</button>
-                                <button onclick="deleteEvent('${doc.id}')">Delete</button>
-                            </td>
                         `;
                         eventList.appendChild(row);
                     });
@@ -172,100 +145,10 @@
             }
         }
 
-        // Check for duplicate Serial Number
-        async function checkDuplicateSNo(sno1) {
-            const eventCollection = collection(db, "Event");
-            const q = query(eventCollection, where("SNo", "==", sno1));
-            const querySnapshot = await getDocs(q);
-            return !querySnapshot.empty; // returns true if SNo exists
-        }
-
-        // Form submission handler (Add or Update event)
-        document.getElementById('editForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
-
-            const sno1 = parseInt(document.getElementById("SNo").value);
-            const From_Name1 = document.getElementById("From_Name").value;
-            const From_Email1 = document.getElementById("From_Email").value;
-            const From_Mobile1 = document.getElementById("From_Mobile").value;
-            const To_Name1 = document.getElementById("To_Name").value;
-            const To_Gname1 = document.getElementById("To_Gname").value;
-            const To_Email1 = document.getElementById("To_Email").value;
-            const To_Mobile1 = document.getElementById("To_Mobile").value;
-            const OccasionType = document.getElementById("Occasion").value;
-            const date = document.getElementById("Date").value;
-
-            if (currentDocId) {
-                // Edit Event
-                try {
-                    await updateDoc(doc(db, "Event", currentDocId), {
-                        SNo: sno1,
-                        From_Name: From_Name1,
-                        From_Email: From_Email1,
-                        From_Mobile: From_Mobile1,
-                        To_Name: To_Name1,
-                        To_Gname: To_Gname1,
-                        To_Email: To_Email1,
-                        To_Mobile: To_Mobile1,
-                        Occasion: OccasionType,
-                        Date: date
-                    });
-
-                    showMessage("Event updated successfully!");
-                    getEvent();
-                    resetForm();
-                } catch (error) {
-                    console.error("Error updating event:", error);
-                    showMessage("Error updating Event.", "red");
-                }
-            } else {
-                // Add New Event
-                try {
-                    const isDuplicate = await checkDuplicateSNo(sno1);
-                    if (isDuplicate) {
-                        showMessage("Error: Event with Serial Number " + sno1 + " already exists.", "red");
-                        return;
-                    }
-
-                    await addDoc(collection(db, "Event"), {
-                        SNo: sno1,
-                        From_Name: From_Name1,
-                        From_Email: From_Email1,
-                        From_Mobile: From_Mobile1,
-                        To_Name: To_Name1,
-                        To_Gname: To_Gname1,
-                        To_Email: To_Email1,
-                        To_Mobile: To_Mobile1,
-                        Occasion: OccasionType,
-                        Date: date
-                    });
-
-                    showMessage("Event added successfully!");
-                    getEvent();
-                    resetForm();
-                } catch (error) {
-                    console.error("Error adding event:", error);
-                    showMessage("Error saving Event.", "red");
-                }
-            }
-        });
-
-        // Show success/error messages
-        function showMessage(message, color = "green") {
-            const messageArea = document.getElementById("messageArea");
-            messageArea.style.color = color;
-            messageArea.textContent = message;
-        }
-
-        // Reset the form and change button text back to 'Save Event'
-        function resetForm() {
-            currentDocId = null;
-            document.getElementById('editForm').reset();
-            document.querySelector("button[type='submit']").textContent = "Save Event";
-        }
         // Initialize by fetching events
         getEvent();
     </script>
 </body>
 
 </html>
+
