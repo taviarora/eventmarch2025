@@ -72,6 +72,7 @@ async function sendEmails() {
 
       // Assuming data.Date is in the format "yyyy-mm-dd"
       const dataDate = data.Date;  // e.g., "2026-04-05"
+      var dataDay1;
 
       // Split the dates into year, month, and day
       const [dataYear, dataMonth, dataDay] = dataDate.split('-');
@@ -86,94 +87,129 @@ async function sendEmails() {
       console.log("todayMonth:", todayMonth);
 
       // Compare only the day and month
-      if (dataDay === todayDay && dataMonth === todayMonth) {
-        console.log("Found matching date:", data);
-        // Do something when the dates match
-
-        const fromname = data.From_Name;
-        const toname = data.To_Gname;
-        const occasion1 = data.Occasion;
-        const rem_mes = data.Reminder_Message;
-
-
-        console.log(fileName);
-        const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
-        //const occasionvar='Birthdays';
-        console.log(occasion1);
-
-        var occasionvar;
-        var fileName;
-        console.log(rannum_bcard);
-
-        var message1, message2, message3, message4, message5, message6, message7, message8, message9, message10, message11, message12, message13, message14, message15, message16, message17, message18, message19, message20, message50;
-
-        if (occasion1 === "Birthday") {
-          fileName = "b" + rannum_bcard + ".JPG";
-          occasionvar = "Birthdays";
-          message1 = "Wishing you a day filled with love, laughter, and joy. Happy Birthday!";
-          message2 = "May this year bring you endless happiness and beautiful memories. Happy Birthday!";
-          message3 = "Another year older, but also another year wiser. Enjoy every moment of your special day!";
-          message4 = "Happy Birthday to one of the most amazing person. May all your dreams come true!";
-          message5 = "On your birthday, I wish you nothing but the best! May your day be as wonderful as you are.";
-          message6 = "Cheers to you on your birthday! May you continue to shine and inspire those around you.";
-          message7 = "May your birthday be the start of a year filled with good luck, good health, and much happiness.";
-          message8 = "Sending you oceans of love and happiness on your birthday. Have a fantastic day!";
-          message9 = "Your birthday is the perfect time to celebrate the wonderful person you are. Have an amazing year ahead!";
-          message10 = "I hope your day is as special as you are! Happy Birthday and here's to another fantastic year!";
-          message11 = "Wishing you a year filled with new adventures, exciting opportunities, and unforgettable moments. Happy Birthday!";
-          message12 = "Wishing you a birthday thats just as fabulous as you are. Lets make this year unforgettable!";
-          message13 = "Happy Birthday! May this day bring a smile to your face and happiness to your heart!";
-          message14 = "May your birthday be the beginning of a year filled with love, laughter, and all the things that make you smile. Have a fantastic day!";
-          message15 = "Wishing you a year full of laughter, love, and all the things that make you happiest. Happy Birthday!";
-          message16 = "On your birthday, I wish you an abundance of joy and a lifetime of adventures!";
-          message17 = "Happy Birthday to someone who makes the world a better place just by being in it!";
-          message18 = "Another year of greatness! Wishing you the most amazing birthday and year ahead.";
-          message19 = "Sending you all my love on your birthday. May you have the best day ever!";
-          message20 = "Happy Birthday to a true gem! Keep shining and spreading your positivity everywhere you go.";
-          var subject1 = `Happy ${data.Occasion}!` + '-' + toname;
-        }
-        else if (occasion1 === "Anniversary") {
-          fileName = "a" + rannum_acard + ".JPG";
-          occasionvar = "Anniversaries"; // Fixed typo: "Anniversarys" -> "Anniversaries"
-          message1 = "Happy Anniversary to a wonderful couple! Wishing you many more years of love and happiness.";
-          message2 = "May your love continue to grow stronger with every passing year. Happy Anniversary!!";
-          message3 = "Wishing you both a lifetime filled with love, joy, and endless memories. Happy Anniversary!";
-          message4 = "Congratulations on your anniversary! May your love keep shining bright for years to come.";
-          message5 = "To the perfect couple: Happy Anniversary! May your love continue to grow in the years ahead.";
-          message6 = "Another year of wonderful memories, and another year to create even more. Happy Anniversary!";
-          message7 = "Happy Anniversary! Your love is an inspiration, and I hope your journey together only gets better.";
-          message8 = "Wishing you a happy anniversary filled with more love and more cherished memories than ever before!";
-          message9 = "To the couple who defines what true love is, happy anniversary! May your bond grow even stronger.";
-          message10 = "May the love you share today be just the beginning of a lifetime of happiness. Happy Anniversary!";
-          message11 = "Happy Anniversary to a couple who makes love look so easy. May your love continue to flourish!";
-          message12 = "May your anniversary be filled with as much love as you both share every day. Happy Anniversary!";
-          message13 = "To the couple who still looks at each other like they did on day one: Happy Anniversary!";
-          message14 = "Happy Anniversary to the perfect pair! May your journey together continue to be filled with love and happiness.";
-          message15 = "Happy Anniversary to a couple whose love keeps growing stronger with each passing year. May your bond continue to inspire those around you";
-          message16 = "Wishing you both a lifetime of love, joy, and happiness. Happy Anniversary to a couple who makes love look effortless!";
-          message17 = "To the couple who has everything—except enough time to stop and realize how perfect you are for each other. Happy Anniversary!";
-          message18 = "May your love story continue to be written with beautiful chapters and happy memories. Wishing you both a very Happy Anniversary!";
-          message19 = "Happy Anniversary to the couple who has made love, laughter, and happiness a way of life. Here to many more years of amazing adventures together!";
-          message20 = "To a love that has stood the test of time, Happy Anniversary! I wish you both endless joy and more years of happiness ahead.";
-          var subject1 = `Happy ${data.Occasion}!` + '-' + toname;
-        }
-        else if (occasion1 === "Reminder") {
+      if (dataDay === todayDay && dataMonth === todayMonth) 
+        {
+          console.log("Found matching date:", data);
+          // Do something when the dates match
+          const fromname = data.From_Name;
+          const toname = data.To_Gname;
+          const occasion1 = data.Occasion;
+          const rem_mes = data.Reminder_Message;
+          console.log(fileName);
+          const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
+          //const occasionvar='Birthdays';
           console.log(occasion1);
-          fileName = "reminder" + ".jpg";
-          occasionvar = "Reminders";
-          rannum_bm = 50;
-          message50 = data.Reminder_Message;
-          var subject1 = data.Occasion + '-' + message50;
-        }
+          var occasionvar;
+          var fileName;
+          console.log(rannum_bcard);
+          var message1, message2, message3, message4, message5, message6, message7, message8, message9, message10, message11, message12, message13, message14, message15, message16, message17, message18, message19, message20, message50;
 
-        console.log(occasionvar);
-        const messagevar = eval('message' + rannum_bm);
+          if (occasion1 === "Birthday") 
+            {
+              fileName = "b" + rannum_bcard + ".JPG";
+              occasionvar = "Birthdays";
+              message1 = "Wishing you a day filled with love, laughter, and joy. Happy Birthday!";
+              message2 = "May this year bring you endless happiness and beautiful memories. Happy Birthday!";
+              message3 = "Another year older, but also another year wiser. Enjoy every moment of your special day!";
+              message4 = "Happy Birthday to one of the most amazing person. May all your dreams come true!";
+              message5 = "On your birthday, I wish you nothing but the best! May your day be as wonderful as you are.";
+              message6 = "Cheers to you on your birthday! May you continue to shine and inspire those around you.";
+              message7 = "May your birthday be the start of a year filled with good luck, good health, and much happiness.";
+              message8 = "Sending you oceans of love and happiness on your birthday. Have a fantastic day!";
+              message9 = "Your birthday is the perfect time to celebrate the wonderful person you are. Have an amazing year ahead!";
+              message10 = "I hope your day is as special as you are! Happy Birthday and here's to another fantastic year!";
+              message11 = "Wishing you a year filled with new adventures, exciting opportunities, and unforgettable moments. Happy Birthday!";
+              message12 = "Wishing you a birthday thats just as fabulous as you are. Lets make this year unforgettable!";
+              message13 = "Happy Birthday! May this day bring a smile to your face and happiness to your heart!";
+              message14 = "May your birthday be the beginning of a year filled with love, laughter, and all the things that make you smile. Have a fantastic day!";
+              message15 = "Wishing you a year full of laughter, love, and all the things that make you happiest. Happy Birthday!";
+              message16 = "On your birthday, I wish you an abundance of joy and a lifetime of adventures!";
+              message17 = "Happy Birthday to someone who makes the world a better place just by being in it!";
+              message18 = "Another year of greatness! Wishing you the most amazing birthday and year ahead.";
+              message19 = "Sending you all my love on your birthday. May you have the best day ever!";
+              message20 = "Happy Birthday to a true gem! Keep shining and spreading your positivity everywhere you go.";
+              var subject1 = `Happy ${data.Occasion}!` + '-' + toname;
+            }
+        
+            else if (occasion1 === "Anniversary") 
+              {
+                  fileName = "a" + rannum_acard + ".JPG";
+                  occasionvar = "Anniversaries"; // Fixed typo: "Anniversarys" -> "Anniversaries"
+                  message1 = "Happy Anniversary to a wonderful couple! Wishing you many more years of love and happiness.";
+                  message2 = "May your love continue to grow stronger with every passing year. Happy Anniversary!!";
+                  message3 = "Wishing you both a lifetime filled with love, joy, and endless memories. Happy Anniversary!";
+                  message4 = "Congratulations on your anniversary! May your love keep shining bright for years to come.";
+                  message5 = "To the perfect couple: Happy Anniversary! May your love continue to grow in the years ahead.";
+                  message6 = "Another year of wonderful memories, and another year to create even more. Happy Anniversary!";
+                  message7 = "Happy Anniversary! Your love is an inspiration, and I hope your journey together only gets better.";
+                  message8 = "Wishing you a happy anniversary filled with more love and more cherished memories than ever before!";
+                  message9 = "To the couple who defines what true love is, happy anniversary! May your bond grow even stronger.";
+                  message10 = "May the love you share today be just the beginning of a lifetime of happiness. Happy Anniversary!";
+                  message11 = "Happy Anniversary to a couple who makes love look so easy. May your love continue to flourish!";
+                  message12 = "May your anniversary be filled with as much love as you both share every day. Happy Anniversary!";
+                  message13 = "To the couple who still looks at each other like they did on day one: Happy Anniversary!";
+                  message14 = "Happy Anniversary to the perfect pair! May your journey together continue to be filled with love and happiness.";
+                  message15 = "Happy Anniversary to a couple whose love keeps growing stronger with each passing year. May your bond continue to inspire those around you";
+                  message16 = "Wishing you both a lifetime of love, joy, and happiness. Happy Anniversary to a couple who makes love look effortless!";
+                  message17 = "To the couple who has everything—except enough time to stop and realize how perfect you are for each other. Happy Anniversary!";
+                  message18 = "May your love story continue to be written with beautiful chapters and happy memories. Wishing you both a very Happy Anniversary!";
+                  message19 = "Happy Anniversary to the couple who has made love, laughter, and happiness a way of life. Here to many more years of amazing adventures together!";
+                  message20 = "To a love that has stood the test of time, Happy Anniversary! I wish you both endless joy and more years of happiness ahead.";
+                  var subject1 = `Happy ${data.Occasion}!` + '-' + toname;
+              }
+        
+              else if (occasion1 === "Reminder") 
+                {
+                    console.log(occasion1);
+                    fileName = "reminder" + ".jpg";
+                    occasionvar = "Reminders";
+                    rannum_bm = 50;
+                    message50 = data.Reminder_Message;
+                    var subject1 = data.Occasion + '-' + message50;
+                }
 
-        sendEmail(data.To_Email, messagevar, subject1, fromname, toname, fileName, occasionvar);
-        //sendWhatsappMsg();
-      }
+              console.log(occasionvar);
+              const messagevar = eval('message' + rannum_bm);
+              sendEmail(data.To_Email, messagevar, subject1, fromname, toname, fileName, occasionvar);
+              //sendWhatsappMsg();
+          }
+          dataDay1 = dataDay-2;
+          if (occasion1 === "Reminder")
+          { 
+            if (dataDay1 === todayDay + 2 && dataMonth === todayMonth) 
+            {
+              console.log("Found matching date for Reminder:", data);
+              // Do something when the dates match
+              const fromname = data.From_Name;
+              const toname = data.To_Gname;
+              const occasion1 = data.Occasion;
+              const rem_mes = data.Reminder_Message;
+              console.log(fileName);
+              const message = `Happy ${data.Occasion}, ${data.To_Name}!`;
+              //const occasionvar='Birthdays';
+              console.log(occasion1);
+              var occasionvar;
+              var fileName;
+              console.log(rannum_bcard);
+              var message50;
+              console.log(occasion1);
+              fileName = "reminder" + ".jpg";
+              occasionvar = "Reminders";
+              rannum_bm = 50;
+              message50 = data.Reminder_Message;
+              var subject1 = data.Occasion + '-' + message50;
+            }
+    
+                  console.log(occasionvar);
+                  const messagevar = eval('message' + rannum_bm);
+                  sendEmail(data.To_Email, messagevar, subject1, fromname, toname, fileName, occasionvar);
+                  //sendWhatsappMsg();
+            }
     });
-  } catch (error) {
+  } 
+  
+  catch (error) 
+  {
     console.error("Error fetching events:", error);
   }
 }
