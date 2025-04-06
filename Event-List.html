@@ -65,12 +65,27 @@
             padding: 5px;
             border-radius: 4px;
         }
+
+        /* Back button style */
+        .back-button {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <h1>Event Management</h1>
+
         <div id="messageArea"></div>
 
         <!-- Occasion Filter -->
@@ -122,6 +137,15 @@
         </table>
     </div>
 
+    <!-- Footer with Back Button -->
+    <footer>
+        <div class="back-button">
+            <a href="index.html">
+                <button>Back to Index</button>
+            </a>
+        </div>
+    </footer>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
@@ -157,23 +181,21 @@
                 if (snapshot.empty) {
                     eventList.innerHTML = "<tr><td colspan='10'>No Events found.</td></tr>";
                 } else {
-                    // Filter events based on the selected Occasion and Month
                     const events = snapshot.docs.map(doc => doc.data());
                     const filteredEvents = events.filter(event => {
-                        const eventMonth = event.Date.split("-")[1]; // Extract month from Date (YYYY-MM-DD)
+                        const eventMonth = event.Date.split("-")[1]; 
                         const matchesOccasion = selectedOccasion ? event.Occasion === selectedOccasion : true;
                         const matchesMonth = selectedMonth ? eventMonth === selectedMonth : true;
                         return matchesOccasion && matchesMonth;
                     });
 
-                    // Sort events by Date first, then by From_Name
                     const sortedDocs = filteredEvents.sort((a, b) => {
                         const dateA = new Date(a.Date);
                         const dateB = new Date(b.Date);
                         if (dateA.getTime() !== dateB.getTime()) {
-                            return dateA - dateB; // Sort by date in ascending order
+                            return dateA - dateB; 
                         }
-                        return a.From_Name.localeCompare(b.From_Name); // If dates are equal, sort by From_Name
+                        return a.From_Name.localeCompare(b.From_Name);
                     });
 
                     sortedDocs.forEach(eventData => {
@@ -200,7 +222,6 @@
             }
         }
 
-        // Function to populate Occasion Filter
         async function populateOccasionFilter() {
             const occasionFilter = document.getElementById("occasionFilter");
             const eventCollection = collection(db, "Event");
@@ -212,7 +233,6 @@
                     occasions.add(occasion);
                 });
 
-                // Add all unique occasions to the filter dropdown
                 occasions.forEach(occasion => {
                     const option = document.createElement("option");
                     option.value = occasion;
@@ -224,26 +244,23 @@
             }
         }
 
-        // Event listener for the Occasion filter
         document.getElementById("occasionFilter").addEventListener("change", (e) => {
             selectedOccasion = e.target.value;
-            getEvent();  // Refresh the events based on selected filter
+            getEvent();
         });
 
-        // Event listener for the Month filter
         document.getElementById("monthFilter").addEventListener("change", (e) => {
             selectedMonth = e.target.value;
-            getEvent();  // Refresh the events based on selected filter
+            getEvent();
         });
 
-        // Initialize by fetching events and populating Occasion filter
         populateOccasionFilter();
         getEvent();
-
     </script>
 </body>
 
 </html>
+
 
 
 
