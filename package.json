@@ -1,15 +1,15 @@
 {
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
-    "firebase-admin": "^13.0.2",
+    "@emailjs/nodejs": "5.0.2",
     "dotenv": "^16.0.3",
     "emailjs-com": "^3.0.0",
-    "@emailjs/nodejs": "5.0.2"
+    "firebase-admin": "^13.0.2",
+    "twilio": "^5.5.2"
   },
   "name": "@emailjs/browser",
   "version": "1.0.0",
   "main": "sendEmail.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
