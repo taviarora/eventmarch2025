@@ -87,7 +87,7 @@ async function sendEmails() {
       console.log("todayMonth:", todayMonth);
 
       // Compare only the day and month
-      if (dataDay === todayDay && dataMonth === todayMonth) 
+      if (dataDay === todayDay && dataMonth === todayMonth)
         {
           console.log("Found matching date:", data);
           // Do something when the dates match
@@ -104,7 +104,7 @@ async function sendEmails() {
           console.log(rannum_bcard);
           var message1, message2, message3, message4, message5, message6, message7, message8, message9, message10, message11, message12, message13, message14, message15, message16, message17, message18, message19, message20, message50;
 
-          if (occasion1 === "Birthday") 
+          if (occasion1 === "Birthday")
             {
               fileName = "b" + rannum_bcard + ".JPG";
               occasionvar = "Birthdays";
@@ -130,8 +130,8 @@ async function sendEmails() {
               message20 = "Happy Birthday to a true gem! Keep shining and spreading your positivity everywhere you go.";
               var subject1 = `Happy ${data.Occasion}!` + '-' + toname;
             }
-        
-            else if (occasion1 === "Anniversary") 
+
+            else if (occasion1 === "Anniversary")
               {
                   fileName = "a" + rannum_acard + ".JPG";
                   occasionvar = "Anniversaries"; // Fixed typo: "Anniversarys" -> "Anniversaries"
@@ -157,8 +157,8 @@ async function sendEmails() {
                   message20 = "To a love that has stood the test of time, Happy Anniversary! I wish you both endless joy and more years of happiness ahead.";
                   var subject1 = `Happy ${data.Occasion}!` + '-' + toname;
               }
-        
-              else if (occasion1 === "Reminder") 
+
+              else if (occasion1 === "Reminder")
                 {
                     console.log(occasion1);
                     fileName = "reminder" + ".jpg";
@@ -175,8 +175,8 @@ async function sendEmails() {
           }
           dataDay1 = dataDay-2;
           if (occasion1 === "Reminder")
-          { 
-            if (dataDay1 === todayDay + 2 && dataMonth === todayMonth) 
+          {
+            if (dataDay1 === todayDay + 2 && dataMonth === todayMonth)
             {
               console.log("Found matching date for Reminder:", data);
               // Do something when the dates match
@@ -199,16 +199,16 @@ async function sendEmails() {
               message50 = data.Reminder_Message;
               var subject1 = data.Occasion + '-' + message50;
             }
-    
+
                   console.log(occasionvar);
                   const messagevar = eval('message' + rannum_bm);
                   sendEmail(data.To_Email, messagevar, subject1, fromname, toname, fileName, occasionvar);
                   //sendWhatsappMsg();
             }
     });
-  } 
-  
-  catch (error) 
+  }
+
+  catch (error)
   {
     console.error("Error fetching events:", error);
   }
@@ -217,13 +217,13 @@ async function sendEmails() {
 const twilio = require('twilio');
 
 async function sendWhatsappMsg(message, to) {
-    const encodedSid = 'QUJlMjFmOTg3ZGQ5M2YzMThhOTg5MTFlYjQ4Mg==';
-    const encodedToken = 'YjJjNTRhYTJjNWU2Y2JmMmNhY2EzM2EwOTRkY2RlM2Rl';
-  
+    const encodedSid = 'QUM5MGYyOWU3YzEwMTQyYmNjODg0YTNlODIxNzFhOGNiZQ==';
+    const encodedToken = 'OTc5M2UyNmFjYmRiNmY0MDRlY2RlZGY2Njk2NzBhMTc=';
+
     // Decode from base64
     const Sid = Buffer.from(encodedSid, 'base64').toString('utf-8');
     const t = Buffer.from(encodedToken, 'base64').toString('utf-8');
-  
+
     console.log('Decoded SID:', Sid);
     console.log('Decoded Token:', t);
 
