@@ -233,7 +233,7 @@ async function sendWhatsappMsg(message, to) {
     try {
         const messageSent = await client.messages.create({
             body: message,
-            from: 'whatsapp:+14155238886',  // Twilio WhatsApp number
+            from: 'whatsapp:+12765313651',  // Twilio WhatsApp number
             to: `whatsapp:${to}`            // Recipient's WhatsApp number (include country code)
         });
         console.log("Message sent with SID:", messageSent.sid);
