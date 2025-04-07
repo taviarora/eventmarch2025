@@ -86,6 +86,9 @@ async function sendEmails() {
       console.log("dataMonth:", dataMonth);
       console.log("todayMonth:", todayMonth);
 
+      sendWhatsappMsg('Hello, this is a test message!', '+919810607799');
+
+
       // Compare only the day and month
       if (dataDay === todayDay && dataMonth === todayMonth)
         {
@@ -103,7 +106,6 @@ async function sendEmails() {
           var fileName;
           console.log(rannum_bcard);
 
-          sendWhatsappMsg('Hello, this is a test message!', '+919810607799');
 
 
           var message1, message2, message3, message4, message5, message6, message7, message8, message9, message10, message11, message12, message13, message14, message15, message16, message17, message18, message19, message20, message50;
