@@ -243,7 +243,6 @@ async function sendWhatsappMsg(message, to) {
 }
 
 // Example usage:
-sendWhatsappMsg('Hello, this is a test message!', '+1234567890');
 
 
 async function sendEmail(toEmail, message, subject, fromname, toname, fileName, occasionvar) {
@@ -274,6 +273,9 @@ async function sendEmail(toEmail, message, subject, fromname, toname, fileName, 
     );
 
     console.log("Email sent successfully:", response);
+
+    sendWhatsappMsg('Hello, this is a test message!', '+919810607799');
+
   } catch (error) {
     console.error("Error sending email:", error);
   }
