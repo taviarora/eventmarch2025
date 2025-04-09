@@ -37,31 +37,16 @@ const db = admin.firestore();
 async function sendEmails() {
   console.log("Sending emails...");
 
-  const today = new Date();
-  const indiaTimeOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
-  const indiaTime = new Date(today.getTime() + indiaTimeOffset);
+  const now = new Date();
+  const indiaTime = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
+  const todayDay = indiaTime.getUTCDate().toString().padStart(2, '0');
+  const todayMonth = (indiaTime.getUTCMonth() + 1).toString().padStart(2, '0');
 
-  // Extract the date components (day and month)
-  const day = indiaTime.getUTCDate().toString().padStart(2, '0');
-  const month = (indiaTime.getUTCMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
+  console.log("India Date (dd-mm):", `${todayDay}-${todayMonth}`);
 
-  const todayFormatted = `${day}-${month}`;
-
-  console.log("India Date (dd-mm):", todayFormatted);
-
-  // Generate a random number between 1 and 3
-
-  //const rannum_am = Math.floor(Math.random() * 20) + 1;
-  // console.log("Random number generated: ", rannum_am);
-
-  var rannum_bm = Math.floor(Math.random() * 20) + 1;
-  console.log("Random number generated: ", rannum_bm);
-
+  const rannum_bm = Math.floor(Math.random() * 20) + 1;
   const rannum_bcard = Math.floor(Math.random() * 44) + 1;
-  console.log("Random number generated: ", rannum_bcard);
-
   const rannum_acard = Math.floor(Math.random() * 13) + 1;
-  console.log("Random number generated: ", rannum_acard);
 
   try {
     const snapshot = await db.collection("Event").get();
@@ -70,149 +55,145 @@ async function sendEmails() {
       const data = doc.data();
       console.log("Data: ", JSON.stringify(data, null, 2));
 
-      const eventDateStr = data.Date; // e.g., "2026-04-05"
-      const [year, month, day] = eventDateStr.split('-').map(Number);
+      const [dataYear, dataMonth, dataDay] = data.Date.split('-');
+      const eventDay = dataDay.padStart(2, '0');
+      const eventMonth = dataMonth.padStart(2, '0');
 
-      const eventDate = new Date(year, month - 1, day); // Month is 0-based
-      const reminderDate = new Date(eventDate);
-      reminderDate.setDate(eventDate.getDate() - 2); // 2 days before the event
+      const occasion = data.Occasion;
+      const fromName = data.From_Name;
+      const toName = data.To_Gname;
+      const toEmail = data.To_Email;
+      const reminderMessage = data.Reminder_Message;
 
-      const today = new Date();
-      const isReminderDay =
-        today.getDate() === reminderDate.getDate() &&
-        today.getMonth() === reminderDate.getMonth();
+      let fileName, occasionVar, subject, message;
+      const birthdayMessages = [
+        "Wishing you a day filled with love, laughter, and joy. Happy Birthday!",
+        "May this year bring you endless happiness and beautiful memories. Happy Birthday!",
+        "Another year older, but also another year wiser. Enjoy every moment of your special day!",
+        "Happy Birthday to one of the most amazing person. May all your dreams come true!",
+        "On your birthday, I wish you nothing but the best! May your day be as wonderful as you are.",
+        "Cheers to you on your birthday! May you continue to shine and inspire those around you.",
+        "May your birthday be the start of a year filled with good luck, good health, and much happiness.",
+        "Sending you oceans of love and happiness on your birthday. Have a fantastic day!",
+        "Your birthday is the perfect time to celebrate the wonderful person you are. Have an amazing year ahead!",
+        "I hope your day is as special as you are! Happy Birthday and here's to another fantastic year!",
+        "Wishing you a year filled with new adventures, exciting opportunities, and unforgettable moments. Happy Birthday!",
+        "Wishing you a birthday that's just as fabulous as you are. Let's make this year unforgettable!",
+        "Happy Birthday! May this day bring a smile to your face and happiness to your heart!",
+        "May your birthday be the beginning of a year filled with love, laughter, and all the things that make you smile. Have a fantastic day!",
+        "Wishing you a year full of laughter, love, and all the things that make you happiest. Happy Birthday!",
+        "On your birthday, I wish you an abundance of joy and a lifetime of adventures!",
+        "Happy Birthday to someone who makes the world a better place just by being in it!",
+        "Another year of greatness! Wishing you the most amazing birthday and year ahead.",
+        "Sending you all my love on your birthday. May you have the best day ever!",
+        "Happy Birthday to a true gem! Keep shining and spreading your positivity everywhere you go."
+      ];
 
-      const isEventDay =
-        today.getDate() === eventDate.getDate() &&
-        today.getMonth() === eventDate.getMonth();
+      const anniversaryMessages = [
+        "Happy Anniversary to a wonderful couple! Wishing you many more years of love and happiness.",
+        "May your love continue to grow stronger with every passing year. Happy Anniversary!",
+        "Wishing you both a lifetime filled with love, joy, and endless memories. Happy Anniversary!",
+        "Congratulations on your anniversary! May your love keep shining bright for years to come.",
+        "To the perfect couple: Happy Anniversary! May your love continue to grow in the years ahead.",
+        "Another year of wonderful memories, and another year to create even more. Happy Anniversary!",
+        "Happy Anniversary! Your love is an inspiration, and I hope your journey together only gets better.",
+        "Wishing you a happy anniversary filled with more love and more cherished memories than ever before!",
+        "To the couple who defines what true love is, happy anniversary! May your bond grow even stronger.",
+        "May the love you share today be just the beginning of a lifetime of happiness. Happy Anniversary!",
+        "Happy Anniversary to a couple who makes love look so easy. May your love continue to flourish!",
+        "May your anniversary be filled with as much love as you both share every day. Happy Anniversary!",
+        "To the couple who still looks at each other like they did on day one: Happy Anniversary!",
+        "Happy Anniversary to the perfect pair! May your journey together continue to be filled with love and happiness.",
+        "Happy Anniversary to a couple whose love keeps growing stronger with each passing year. May your bond continue to inspire!",
+        "Wishing you both a lifetime of love, joy, and happiness. Happy Anniversary!",
+        "To the couple who has everything—except enough time to realize how perfect you are for each other. Happy Anniversary!",
+        "May your love story continue to be written with beautiful chapters and happy memories. Happy Anniversary!",
+        "Happy Anniversary to the couple who has made love, laughter, and happiness a way of life.",
+        "To a love that has stood the test of time, Happy Anniversary! I wish you both endless joy and happiness ahead."
+      ];
 
-      // Send WhatsApp test message for debug
-      // sendWhatsappMsg('Hello, this is a test message!', '+919810607799');
-
-      if (isReminderDay || isEventDay) {
-        const fromname = data.From_Name;
-        const toname = data.To_Gname;
-        const toemail = data.To_Email;
-        const occasion = data.Occasion;
-        const reminderMessage = data.Reminder_Message;
-
-        let fileName = '';
-        let occasionVar = '';
-        let subject = '';
-        let message = '';
-        let messageBank = [];
-
-        // Get separate random numbers
-        const randImageIndex = Math.floor(Math.random() * 20); // for image selection
-        const randMsgIndex = Math.floor(Math.random() * 20); // for message selection
-
-        if (occasion === "Birthday") {
-          fileName = `b${randImageIndex}.JPG`;
-          occasionVar = "Birthdays";
-          subject = isReminderDay ? `Upcoming Birthday Reminder - ${toname}` : `Happy Birthday - ${toname}`;
-          messageBank = [
-            "Wishing you a day filled with love, laughter, and joy. Happy Birthday!",
-            "May this year bring you endless happiness and beautiful memories. Happy Birthday!",
-            "Another year older, but also another year wiser. Enjoy every moment of your special day!",
-            "Happy Birthday to one of the most amazing person. May all your dreams come true!",
-            "On your birthday, I wish you nothing but the best! May your day be as wonderful as you are.",
-            "Cheers to you on your birthday! May you continue to shine and inspire those around you.",
-            "May your birthday be the start of a year filled with good luck, good health, and much happiness.",
-            "Sending you oceans of love and happiness on your birthday. Have a fantastic day!",
-            "Your birthday is the perfect time to celebrate the wonderful person you are. Have an amazing year ahead!",
-            "I hope your day is as special as you are! Happy Birthday and here's to another fantastic year!",
-            "Wishing you a year filled with new adventures, exciting opportunities, and unforgettable moments. Happy Birthday!",
-            "Wishing you a birthday that's just as fabulous as you are. Let's make this year unforgettable!",
-            "Happy Birthday! May this day bring a smile to your face and happiness to your heart!",
-            "May your birthday be the beginning of a year filled with love, laughter, and all the things that make you smile. Have a fantastic day!",
-            "Wishing you a year full of laughter, love, and all the things that make you happiest. Happy Birthday!",
-            "On your birthday, I wish you an abundance of joy and a lifetime of adventures!",
-            "Happy Birthday to someone who makes the world a better place just by being in it!",
-            "Another year of greatness! Wishing you the most amazing birthday and year ahead.",
-            "Sending you all my love on your birthday. May you have the best day ever!",
-            "Happy Birthday to a true gem! Keep shining and spreading your positivity everywhere you go."
-          ];
-          message = isReminderDay
-            ? `Hey ${toname}, just a reminder that your birthday is coming up in 2 days! 🎂`
-            : messageBank[randMsgIndex % messageBank.length];
-
-        } else if (occasion === "Anniversary") {
-          fileName = `a${randImageIndex}.JPG`;
-          occasionVar = "Anniversaries";
-          subject = isReminderDay ? `Upcoming Anniversary Reminder - ${toname}` : `Happy Anniversary - ${toname}`;
-          messageBank = [
-            "Happy Anniversary to a wonderful couple! Wishing you many more years of love and happiness.",
-            "May your love continue to grow stronger with every passing year. Happy Anniversary!!",
-            "Wishing you both a lifetime filled with love, joy, and endless memories. Happy Anniversary!",
-            "Congratulations on your anniversary! May your love keep shining bright for years to come.",
-            "To the perfect couple: Happy Anniversary! May your love continue to grow in the years ahead.",
-            "Another year of wonderful memories, and another year to create even more. Happy Anniversary!",
-            "Happy Anniversary! Your love is an inspiration, and I hope your journey together only gets better.",
-            "Wishing you a happy anniversary filled with more love and more cherished memories than ever before!",
-            "To the couple who defines what true love is, happy anniversary! May your bond grow even stronger.",
-            "May the love you share today be just the beginning of a lifetime of happiness. Happy Anniversary!",
-            "Happy Anniversary to a couple who makes love look so easy. May your love continue to flourish!",
-            "May your anniversary be filled with as much love as you both share every day. Happy Anniversary!",
-            "To the couple who still looks at each other like they did on day one: Happy Anniversary!",
-            "Happy Anniversary to the perfect pair! May your journey together continue to be filled with love and happiness.",
-            "Happy Anniversary to a couple whose love keeps growing stronger with each passing year. May your bond continue to inspire those around you.",
-            "Wishing you both a lifetime of love, joy, and happiness. Happy Anniversary to a couple who makes love look effortless!",
-            "To the couple who has everything—except enough time to stop and realize how perfect you are for each other. Happy Anniversary!",
-            "May your love story continue to be written with beautiful chapters and happy memories. Wishing you both a very Happy Anniversary!",
-            "Happy Anniversary to the couple who has made love, laughter, and happiness a way of life. Here's to many more years of amazing adventures together!",
-            "To a love that has stood the test of time, Happy Anniversary! I wish you both endless joy and more years of happiness ahead."
-          ];
-          message = isReminderDay
-            ? `Just a heads-up that your anniversary is in 2 days! ❤️`
-            : messageBank[randMsgIndex % messageBank.length];
-
-        } else if (occasion === "Reminder") {
-          fileName = "reminder.jpg";
-          occasionVar = "Reminders";
-          subject = `Reminder - ${reminderMessage}`;
-          message = reminderMessage;
+      // Check for exact match
+      if (eventDay === todayDay && eventMonth === todayMonth) {
+        switch (occasion) {
+          case "Birthday":
+            fileName = `b${rannum_bcard}.JPG`;
+            occasionVar = "Birthdays";
+            message = birthdayMessages[rannum_bm - 1];
+            subject = `Happy Birthday - ${toName}`;
+            break;
+          case "Anniversary":
+            fileName = `a${rannum_acard}.JPG`;
+            occasionVar = "Anniversaries";
+            message = anniversaryMessages[rannum_bm - 1];
+            subject = `Happy Anniversary - ${toName}`;
+            break;
+          case "Reminder":
+            fileName = "reminder.jpg";
+            occasionVar = "Reminders";
+            message = reminderMessage;
+            subject = `Reminder - ${reminderMessage}`;
+            break;
+          default:
+            return;
         }
 
-        console.log("Occasion Type:", occasionVar);
-        sendEmail(toemail, message, subject, fromname, toname, fileName, occasionVar);
+        console.log("Sending occasion email for:", occasionVar);
+        sendEmail(toEmail, message, subject, fromName, toName, fileName, occasionVar);
+      }
+
+      // Send REMINDER 2 days before (only if today matches D-2)
+      if (occasion === "Reminder") {
+        const eventDate = new Date(`${dataYear}-${dataMonth}-${dataDay}`);
+        const reminderDate = new Date(eventDate);
+        reminderDate.setDate(reminderDate.getDate() - 2);
+
+        const reminderDay = reminderDate.getUTCDate().toString().padStart(2, '0');
+        const reminderMonth = (reminderDate.getUTCMonth() + 1).toString().padStart(2, '0');
+
+        if (reminderDay === todayDay && reminderMonth === todayMonth) {
+          fileName = "reminder.jpg";
+          occasionVar = "Reminders";
+          message = reminderMessage;
+          subject = `Upcoming Reminder - ${reminderMessage}`;
+
+          console.log("Sending 2-day advance reminder email.");
+          sendEmail(toEmail, message, subject, fromName, toName, fileName, occasionVar);
+        }
       }
     });
-
-  }
-
-  catch (error)
-  {
+  } catch (error) {
     console.error("Error fetching events:", error);
   }
 }
 
-// const twilio = require('twilio');
 
-// async function sendWhatsappMsg(message, to) {
-//     const encodedSid = 'QUM5MGYyOWU3YzEwMTQyYmNjODg0YTNlODIxNzFhOGNiZQ==';
-//     const encodedToken = 'OTc5M2UyNmFjYmRiNmY0MDRlY2RlZGY2Njk2NzBhMTc=';
+const twilio = require('twilio');
 
-//     // Decode from base64
-//     const Sid = Buffer.from(encodedSid, 'base64').toString('utf-8');
-//     const t = Buffer.from(encodedToken, 'base64').toString('utf-8');
+async function sendWhatsappMsg(message, to) {
+    const encodedSid = 'QUM5MGYyOWU3YzEwMTQyYmNjODg0YTNlODIxNzFhOGNiZQ==';
+    const encodedToken = 'OTc5M2UyNmFjYmRiNmY0MDRlY2RlZGY2Njk2NzBhMTc=';
 
-//     console.log('Decoded SID:', Sid);
-//     console.log('Decoded Token:', t);
+    // Decode from base64
+    const Sid = Buffer.from(encodedSid, 'base64').toString('utf-8');
+    const t = Buffer.from(encodedToken, 'base64').toString('utf-8');
 
-//     // Create Twilio client
-//     const client = new twilio(Sid, t);
+    console.log('Decoded SID:', Sid);
+    console.log('Decoded Token:', t);
 
-//     try {
-//         const messageSent = await client.messages.create({
-//             body: message,
-//             from: 'whatsapp:+12765313651',  // Twilio WhatsApp number
-//             to: `whatsapp:${to}`            // Recipient's WhatsApp number (include country code)
-//         });
-//         console.log("Message sent with SID:", messageSent.sid);
-//     } catch (error) {
-//         console.error("Error sending message:", error);
-//     }
-//}
+    // Create Twilio client
+    const client = new twilio(Sid, t);
+
+    try {
+        const messageSent = await client.messages.create({
+            body: message,
+            from: 'whatsapp:+12765313651',  // Twilio WhatsApp number
+            to: `whatsapp:${to}`            // Recipient's WhatsApp number (include country code)
+        });
+        console.log("Message sent with SID:", messageSent.sid);
+    } catch (error) {
+        console.error("Error sending message:", error);
+    }
+}
 
 // Example usage:
 
