@@ -87,7 +87,7 @@ async function sendEmails() {
         today.getMonth() === eventDate.getMonth();
 
       // Send WhatsApp test message for debug
-      sendWhatsappMsg('Hello, this is a test message!', '+919810607799');
+      // sendWhatsappMsg('Hello, this is a test message!', '+919810607799');
 
       if (isReminderDay || isEventDay) {
         const fromname = data.From_Name;
