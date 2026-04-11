@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Test Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Send Test Email</h1>
+        <button id="sendMailBtn">Send Mail</button>
+        <div class="message" id="messageArea"></div>
+    </div>
+
+    <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
+
+    <script>
+        // Initialize EmailJS with your user ID (replace with your actual user ID)
+        emailjs.init("qcbXaXrWGMaIRt6_o");  // Replace 'your_user_id' with your actual User ID from EmailJS
+
+        // Function to send the email on button click
+        document.getElementById('sendMailBtn').addEventListener('click', function() {
+            // Show loading message
+            document.getElementById('messageArea').textContent = 'Sending email...';
+
+            // Send the email using EmailJS
+            emailjs.send("service_jitwsrj", "template_m0u22pm", {
+                from_name: "Your Name",   // Customize with sender's name
+                from_email: "tpsarora@gmail.com",  // Customize with sender's email
+                to_email: "tpsarora@gmail.com",  // Customize with recipient's email
+                message: "This is a test email sent from the frontend!"  // Email message content
+            })
+            .then(function(response) {
+                // If successful, show a success message
+                console.log('Success:', response);
+                document.getElementById('messageArea').textContent = 'Email sent successfully!';
+                document.getElementById('messageArea').style.color = 'green';
+            }, function(error) {
+                // If there is an error, show an error message
+                console.error('Error:', error);
+                document.getElementById('messageArea').textContent = 'Failed to send email.';
+                document.getElementById('messageArea').style.color = 'red';
+            });
+        });
+    </script>
+
+</body>
+
+</html>

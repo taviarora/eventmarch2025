@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Today's Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        #loading {
+            display: none;
+            font-size: 18px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Check Today's Events</h1>
+        <button id="checkEventBtn">Check Events</button>
+        <div class="message" id="messageArea"></div>
+        <div id="loading">Loading...</div>
+        <button id="sendMailBtn" style="display:none;">Send Email</button>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfbqC-893YBqhgR5OR0eHyX-EXzCIoTC8",
+            authDomain: "jwdatabase-f0e20.firebaseapp.com",
+            databaseURL: "https://jwdatabase-f0e20-default-rtdb.firebaseio.com",
+            projectId: "jwdatabase-f0e20",
+            storageBucket: "jwdatabase-f0e20.appspot.com",
+            messagingSenderId: "1335908909",
+            appId: "1:1335908909:web:0c132d7c79008c490c36a4",
+            measurementId: "G-BQG1N754TN"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const today = new Date();
+        const todayMonth = today.getMonth() + 1;
+        const todayDate = today.getDate();
+        const todayFormatted = `${today.getFullYear()}-${todayMonth < 10 ? '0' : ''}${todayMonth}-${todayDate < 10 ? '0' : ''}${todayDate}`;
+
+        // Function to check events for today
+        async function checkEvents() {
+            document.getElementById('loading').style.display = 'block';
+            try {
+                const eventCollection = collection(db, "Event");
+                const querySnapshot = await getDocs(eventCollection);
+
+                if (querySnapshot.empty) {
+                    console.log("No documents found.");
+                    document.getElementById('messageArea').innerHTML = "No events in the database.";
+                    return;
+                }
+
+                let eventsFound = false;
+                let eventsMessage = "";
+
+                querySnapshot.forEach((docSnapshot) => {
+                    const eventData = docSnapshot.data();
+                    const eventDate = eventData.Date;
+                    const occasion = eventData.Occasion;
+
+                    // Check if the event date matches today's date
+                    if (eventDate === todayFormatted) {
+                        eventsFound = true;
+
+                        // Customize message based on the Occasion field
+                        let customMessage = "";
+                        if (occasion === "Birthday") {
+                            customMessage = `Happy Birthday, ${eventData.Name}! 🎉`;
+                        } else if (occasion === "Anniversary") {
+                            customMessage = `Happy Anniversary, ${eventData.Name}! 💍`;
+                        } else {
+                            customMessage = `${eventData.Name}'s event: ${occasion}`;
+                        }
+
+                        eventsMessage += `<p>${customMessage} - ${eventData.Email}</p>`;
+                    }
+                });
+
+                if (eventsFound) {
+                    document.getElementById('messageArea').innerHTML = `There are events today!<br>${eventsMessage}`;
+                    document.getElementById('sendMailBtn').style.display = "inline-block";
+                } else {
+                    document.getElementById('messageArea').innerHTML = `No events for today.<br>Today's Date: ${todayFormatted}`;
+                }
+            } catch (error) {
+                console.error("Error checking events:", error);
+                document.getElementById('messageArea').textContent = 'Error checking events.';
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Function to send email
+        function sendEmail() {
+            const emailContent = `Today's Event: <br>${document.getElementById('messageArea').innerHTML}`;
+            emailjs.send("service_jitwsrj", "template_m0u22pm", {
+                from_name: "Your Name",
+                from_email: "tpsarora@gmail.com",
+                to_email: "recipient@example.com",
+                message: emailContent
+            }).then(function(response) {
+                console.log('Success:', response);
+                document.getElementById('messageArea').textContent = 'Email sent successfully!';
+                document.getElementById('messageArea').style.color = 'green';
+            }, function(error) {
+                console.error('Error:', error);
+                document.getElementById('messageArea').textContent = 'Failed to send email.';
+                document.getElementById('messageArea').style.color = 'red';
+            });
+        }
+
+        document.getElementById('checkEventBtn').addEventListener('click', checkEvents);
+        document.getElementById('sendMailBtn').addEventListener('click', sendEmail);
+
+        emailjs.init("qcbXaXrWGMaIRt6_o");
+    </script>
+</body>
+
+</html>

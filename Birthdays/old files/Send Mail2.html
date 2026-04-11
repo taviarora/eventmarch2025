@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Test Email with EmailJS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Send Test Email</h1>
+        <button id="sendEmailBtn">Send Email</button>
+        <div class="message" id="messageArea"></div>
+    </div>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <script>
+        // Initialize EmailJS with your user ID
+        emailjs.init("qcbXaXrWGMaIRt6_o");  // Replace with your EmailJS user ID
+
+        // Function to send email using EmailJS
+        function sendEmail() {
+            emailjs.send("service_jitwsrj", "template_m0u22pm", {
+                from_name: "Tavinder Arora",  // Hardcoded sender's name
+                to_name: "Tavinder Arora", 
+                from_email: "tpsarora@gmail.com",  // Hardcoded sender's email
+                email: "tavinder.arora@cnhind.com",  // Hardcoded sender's email
+       //         to_email: "malikaarora2202@gmail.com",  // Hardcoded recipient's email
+                subject: "Happy  Birthday",  // Hardcoded subject
+                message: "Happy Birthday to you"  // Hardcoded message content
+            }).then(function(response) {
+                console.log('Success:', response);
+                document.getElementById('messageArea').textContent = 'Email sent successfully!';
+                document.getElementById('messageArea').style.color = 'green';
+            }, function(error) {
+                console.error('Error:', error);
+                document.getElementById('messageArea').textContent = 'Failed to send email.';
+                document.getElementById('messageArea').style.color = 'red';
+            });
+        }
+
+        // Add event listener for the "Send Email" button
+        document.getElementById('sendEmailBtn').addEventListener('click', sendEmail);
+    </script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="../commonstyles.css">
+    <title>Event Management</title>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"></script>
+    <style>
+        h1, h2 {
+            color: #333;
+        }
+
+        .form-group {
+            display: flex; /* Use flexbox for label-input layout */
+            align-items: center; /* Center vertically */
+            margin-bottom: 10px; /* Space between rows */
+        }
+
+        label {
+            margin-right: 10px; /* Space between label and input */
+            width: 150px; /* Fixed width for labels */
+        }
+
+        input {
+            flex: 1; /* Take remaining space */
+            padding: 5px; /* Padding inside inputs */
+            border: 1px solid #ccc; /* Border around inputs */
+            border-radius: 3px; /* Rounded corners */
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: maroon;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px; /* Space between button and inputs */
+        }
+
+        button:hover {
+            background-color: darkred; /* Darker shade on hover */
+        }
+
+        #eventTable {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: maroon;
+            color: white;
+        }
+
+        #eventTable th {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 2px solid white;
+        }
+
+        #eventTable td {
+            padding: 10px;
+            text-align: left;
+            background-color: white;
+            border-bottom: 2px solid black;
+            color: black;
+        }
+
+        #eventTable th.serial,
+        #eventTable td.serial {
+            text-align: center;
+        }
+
+        #messageArea {
+            margin: 10px 0;
+            color: green;
+        }
+
+        @media (max-width: 600px) {
+            .form-group {
+                flex-direction: column; /* Stack vertically on small screens */
+            }
+
+            label {
+                width: auto; /* Allow labels to take natural width */
+            }
+
+            button {
+                margin-left: 0; /* Remove margin on small screens */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-margin">
+        <h1>Maintain Events</h1>
+        <div id="messageArea"></div>
+
+        <form id="eventForm">
+            <div class="form-group">
+                <label for="SNo">Serial Number:</label>
+                <input type="number" id="eventSNo" required>
+
+                <label for="Name">Name:</label>
+                <input type="text" id="eventName" required>
+
+                <label for="G_Name">G_Name:</label>
+                <input type="text" id="eventG_Name" required>
+
+                <label for="Event">Event:</label>
+                <input type="text" id="eventEvent" required>
+
+                <label for="Date">Date:</label>
+                <input type="date" id="eventDate" required>
+            </div>               
+            <button type="submit">Save Event</button>
+        </form>
+
+        <table id="eventTable">
+            <thead>
+                <tr>
+                    <th class="serial">Serial No.</th>
+                    <th>Name</th>
+                    <th>G_Name</th>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="eventList"></tbody>
+        </table>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfbqC-893YBqhgR5OR0eHyX-EXzCIoTC8",
+            authDomain: "jwdatabase-f0e20.firebaseapp.com",
+            databaseURL: "https://jwdatabase-f0e20-default-rtdb.firebaseio.com",
+            projectId: "jwdatabase-f0e20",
+            storageBucket: "jwdatabase-f0e20.appspot.com",
+            messagingSenderId: "1335908909",
+            appId: "1:1335908909:web:0c132d7c79008c490c36a4",
+            measurementId: "G-BQG1N754TN"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Function to get all events
+        async function getEvent() {
+            const eventList = document.getElementById("eventList");
+            eventList.innerHTML = "";
+
+            const eventCollection = collection(db, "Event");
+            try {
+                const snapshot = await getDocs(eventCollection);
+                if (snapshot.empty) {
+                    eventList.innerHTML = "<tr><td colspan='6'>No Events found.</td></tr>";
+                } else {
+                    const eventArray = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    eventArray.sort((a, b) => a.SNo - b.SNo);
+
+                    eventArray.forEach((eventData, index) => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td class="serial">${index + 1}</td>
+                            <td>${eventData.SNo}</td>
+                            <td>${eventData.Name}</td>
+                            <td>${eventData.G_Name}</td>
+                            <td>${eventData.Event}</td>
+                            <td>${eventData.Date}</td>
+                            <td>
+                                <button onclick="editEvent('${eventData.SNo}', ${JSON.stringify(eventData).replace(/"/g, '&quot;')})">Edit</button>
+                                <button onclick="deleteEvent('${eventData.SNo}')">Delete</button>
+                            </td>
+                        `;
+                        eventList.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error("Error getting Events:", error);
+                eventList.innerHTML = "<tr><td colspan='6'>Error loading Events.</td></tr>";
+            }
+        }
+
+        document.getElementById('eventForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const eventSNo = parseInt(document.getElementById('eventSNo').value);
+            const eventName = document.getElementById('eventName').value;
+            const eventG_Name = document.getElementById('eventG_Name').value;
+            const eventEvent = document.getElementById('eventEvent').value;
+            const eventDate = document.getElementById('eventDate').value;
+
+            console.log("Form Submission - SNo:", eventSNo);
+            console.log("Event Data:", { eventName, eventG_Name, eventEvent, eventDate });
+
+            if (isNaN(eventSNo)) {
+                showMessage("Please enter a valid Serial Number.", "red");
+                return;
+            }
+
+            try {
+                console.log("Querying Firestore for SNo:", eventSNo);
+                const q = query(collection(db, "Event"), where("SNo", "==", eventSNo));
+                const querySnapshot = await getDocs(q);
+                console.log("Query result size:", querySnapshot.size);
+
+                if (querySnapshot.empty) {
+                    showMessage("Event not found for the given Serial Number.", "red");
+                } else {
+                    const docRef = querySnapshot.docs[0].ref;
+                    await updateDoc(docRef, {
+                        Name: eventName,
+                        G_Name: eventG_Name,
+                        Event: eventEvent,
+                        Date: eventDate
+                    });
+
+                    document.getElementById('eventForm').reset();
+                    showMessage("Event updated successfully!");
+                    getEvent();
+                }
+            } catch (error) {
+                console.error("Error updating event:", error);
+                showMessage("Error updating Event.", "red");
+            }
+        });
+
+        function showMessage(message, color = "green") {
+            const messageArea = document.getElementById("messageArea");
+            messageArea.textContent = message;
+            messageArea.style.color = color;
+        }
+
+        // Load events on page load
+        getEvent();
+    </script>
+</body>
+
+</html>
+

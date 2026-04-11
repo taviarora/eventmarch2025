@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Event Manager</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+</head>
+<body>
+    <h1>Manage Events</h1>
+
+    <h2>Add Event</h2>
+    <form id="add-event-form">
+        <input type="text" id="name" placeholder="Event Name" required><br>
+        <input type="text" id="g_name" placeholder="Group Name" required><br>
+        <input type="text" id="occasion" placeholder="Occasion" required><br>
+        <input type="email" id="email" placeholder="Email" required><br>
+        <input type="date" id="date" required><br>
+        <textarea id="remarks" placeholder="Remarks"></textarea><br>
+        <button type="submit">Add Event</button>
+    </form>
+
+    <h2>Edit Event</h2>
+    <form id="edit-event-form">
+        <input type="number" id="edit-sno" placeholder="SNo (ID)" required><br>
+        <input type="text" id="edit-name" placeholder="New Event Name"><br>
+        <input type="text" id="edit-gname" placeholder="New Group Name"><br>
+        <input type="text" id="edit-occasion" placeholder="New Occasion"><br>
+        <input type="email" id="edit-email" placeholder="New Email"><br>
+        <input type="date" id="edit-date" placeholder="New Date"><br>
+        <textarea id="edit-remarks" placeholder="New Remarks"></textarea><br>
+        <button type="submit">Edit Event</button>
+    </form>
+
+    <h2>Delete Event</h2>
+    <input type="number" id="delete-sno" placeholder="Enter SNo to Delete" required><br>
+    <button id="delete-event">Delete Event</button>
+
+    <h2>Event List</h2>
+    <ul id="event-list"></ul>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Reference to events
+        const eventsRef = db.ref('Event');
+
+        // Add event
+        document.getElementById('add-event-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const newEvent = {
+                SNo: Date.now(),  // Use timestamp as a unique ID
+                Name: document.getElementById('name').value,
+                G_Name: document.getElementById('g_name').value,
+                Occasion: document.getElementById('occasion').value,
+                Email: document.getElementById('email').value,
+                Date: document.getElementById('date').value,
+                Remarks: document.getElementById('remarks').value,
+            };
+
+            eventsRef.push(newEvent).then(() => {
+                alert('Event added!');
+                document.getElementById('add-event-form').reset();
+                loadEvents();
+            });
+        });
+
+        // Edit event
+        document.getElementById('edit-event-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const sNo = document.getElementById('edit-sno').value;
+            const updatedEvent = {};
+            if (document.getElementById('edit-name').value) updatedEvent.Name = document.getElementById('edit-name').value;
+            if (document.getElementById('edit-gname').value) updatedEvent.G_Name = document.getElementById('edit-gname').value;
+            if (document.getElementById('edit-occasion').value) updatedEvent.Occasion = document.getElementById('edit-occasion').value;
+            if (document.getElementById('edit-email').value) updatedEvent.Email = document.getElementById('edit-email').value;
+            if (document.getElementById('edit-date').value) updatedEvent.Date = document.getElementById('edit-date').value;
+            if (document.getElementById('edit-remarks').value) updatedEvent.Remarks = document.getElementById('edit-remarks').value;
+
+            eventsRef.child(sNo).update(updatedEvent).then(() => {
+                alert('Event updated!');
+                loadEvents();
+            });
+        });
+
+        // Delete event
+        document.getElementById('delete-event').addEventListener('click', function() {
+            const sNo = document.getElementById('delete-sno').value;
+            eventsRef.child(sNo).remove().then(() => {
+                alert('Event deleted!');
+                loadEvents();
+            });
+        });
+
+        // Load events
+        function loadEvents() {
+            eventsRef.once('value', function(snapshot) {
+                const eventList = document.getElementById('event-list');
+                eventList.innerHTML = '';  // Clear existing list
+
+                snapshot.forEach(function(childSnapshot) {
+                    const event = childSnapshot.val();
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `SNo: ${event.SNo}, Name: ${event.Name}, Occasion: ${event.Occasion}`;
+                    eventList.appendChild(listItem);
+                });
+            });
+        }
+
+        // Initial load of events
+        loadEvents();
+    </script>
+</body>
+</html>

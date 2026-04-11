@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: maroon;
+            color: white;
+            overflow-x: auto;
+            display: block;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #6c0202;
+        }
+
+        .filter-container {
+            margin-bottom: 10px;
+        }
+
+        select {
+            padding: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #333;
+            color: white;
+            margin-top: 20px;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            table {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Event Management</h1>
+
+    <!-- Filters -->
+    <div class="filter-container">
+        <label>Occasion:</label>
+        <select id="occasionFilter">
+            <option value="">All</option>
+        </select>
+    </div>
+
+    <div class="filter-container">
+        <label>Month:</label>
+        <select id="monthFilter">
+            <option value="">All</option>
+            <option value="01">Jan</option>
+            <option value="02">Feb</option>
+            <option value="03">Mar</option>
+            <option value="04">Apr</option>
+            <option value="05">May</option>
+            <option value="06">Jun</option>
+            <option value="07">Jul</option>
+            <option value="08">Aug</option>
+            <option value="09">Sep</option>
+            <option value="10">Oct</option>
+            <option value="11">Nov</option>
+            <option value="12">Dec</option>
+        </select>
+    </div>
+
+    <!-- Table -->
+    <table>
+        <thead>
+        <tr>
+            <th>Serial</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Email</th>
+            <th>Occasion</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody id="eventList"></tbody>
+    </table>
+</div>
+
+<footer>
+    <a href="index.html"><button>Back</button></a>
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSy...",
+    authDomain: "jwdatabase-f0e20.firebaseapp.com",
+    projectId: "jwdatabase-f0e20"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let selectedOccasion = "";
+let selectedMonth = "";
+
+/* =========================
+   MAIN FUNCTION (FIXED)
+========================= */
+async function getEvent() {
+    const eventList = document.getElementById("eventList");
+    eventList.innerHTML = "";
+
+    try {
+        const snapshot = await getDocs(collection(db, "Event"));
+
+        if (snapshot.empty) {
+            eventList.innerHTML = "<tr><td colspan='6'>No data</td></tr>";
+            return;
+        }
+
+        const events = snapshot.docs.map(doc => doc.data());
+
+        // FILTER
+const filteredEvents = events.filter(event => {
+    const date = event.Date || "";
+
+let month = "";
+
+if (event.Date) {
+    const d = new Date(event.Date);
+    if (!isNaN(d)) {
+        month = String(d.getMonth() + 1).padStart(2, "0");
+    }
+}
+
+    const matchOccasion = selectedOccasion ? event.Occasion === selectedOccasion : true;
+    const matchMonth = selectedMonth ? month === selectedMonth : true;
+
+    return matchOccasion && matchMonth;
+});
+        // SORT
+filteredEvents.sort((a, b) => {
+    const snoA = Number(a.SNo) || 0;
+    const snoB = Number(b.SNo) || 0;
+    return snoA - snoB; // ascending
+});
+
+        // DISPLAY
+        filteredEvents.forEach((event, index) => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+              <td>${event.SNo || ""}</td>
+                <td>${event.From_Name || ""}</td>
+                <td>${event.To_Name || ""}</td>
+                <td>${event.To_Email || ""}</td>
+                <td>${event.Occasion || ""}</td>
+                <td>${event.Date || ""}</td>
+            `;
+
+            eventList.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error("ERROR:", error);
+        eventList.innerHTML = "<tr><td colspan='6'>Error loading data</td></tr>";
+    }
+}
+
+/* =========================
+   FILTER DROPDOWN
+========================= */
+async function populateOccasionFilter() {
+    const select = document.getElementById("occasionFilter");
+
+    try {
+        const snapshot = await getDocs(collection(db, "Event"));
+        const set = new Set();
+
+        snapshot.docs.forEach(doc => {
+            const occ = doc.data().Occasion;
+            if (occ) set.add(occ);
+        });
+
+        set.forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.textContent = o;
+            select.appendChild(opt);
+        });
+
+    } catch (error) {
+        console.error("Dropdown error:", error);
+    }
+}
+
+/* =========================
+   EVENTS
+========================= */
+document.getElementById("occasionFilter").addEventListener("change", e => {
+    selectedOccasion = e.target.value;
+    getEvent();
+});
+
+document.getElementById("monthFilter").addEventListener("change", e => {
+    selectedMonth = e.target.value;
+    getEvent();
+});
+
+/* INIT */
+populateOccasionFilter();
+getEvent();
+
+</script>
+
+</body>
+</html>

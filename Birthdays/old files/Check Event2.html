@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Today's Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #loadingSpinner {
+            display: none;
+            font-size: 18px;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Check Today's Events</h1>
+        <div id="loadingSpinner">Loading...</div>
+        <div class="message" id="messageArea"></div>
+    </div>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfbqC-893YBqhgR5OR0eHyX-EXzCIoTC8",
+            authDomain: "jwdatabase-f0e20.firebaseapp.com",
+            databaseURL: "https://jwdatabase-f0e20-default-rtdb.firebaseio.com",
+            projectId: "jwdatabase-f0e20",
+            storageBucket: "jwdatabase-f0e20.appspot.com",
+            messagingSenderId: "1335908909",
+            appId: "1:1335908909:web:0c132d7c79008c490c36a4",
+            measurementId: "G-BQG1N754TN"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Get today's date in YYYY-MM-DD format
+        const today = new Date();
+        const todayMonth = today.getMonth() + 1;  // Months are 0-indexed (January = 0)
+        const todayDate = today.getDate();
+        const todayFormatted = `${today.getFullYear()}-${todayMonth < 10 ? '0' : ''}${todayMonth}-${todayDate < 10 ? '0' : ''}${todayDate}`;
+
+        // Function to check for today's events and send an email automatically
+        async function checkAndSendEmail() {
+            try {
+                // Show loading spinner while processing
+                document.getElementById('loadingSpinner').style.display = 'block';
+                document.getElementById('messageArea').textContent = ''; // Clear previous messages
+
+                // Get the "Event" collection from Firestore
+                const eventCollection = collection(db, "Event");
+                const querySnapshot = await getDocs(eventCollection);
+
+                if (querySnapshot.empty) {
+                    console.log("No documents found.");
+                    document.getElementById('messageArea').innerHTML = "No events in the database.";
+                    document.getElementById('loadingSpinner').style.display = 'none';
+                    return;
+                }
+
+                let eventsFound = false;
+                let eventsMessage = "";
+                let eventsGName = "";
+                let Occassion = "";
+                let recipientEmail = "";  // Default recipient email
+
+                // Loop through documents and check if any event matches today's date
+                querySnapshot.forEach((docSnapshot) => {
+                    const eventData = docSnapshot.data();
+                    const occasion = eventData.Occasion;
+                    const eventsGName = eventData.G_Name;
+                    console.log(eventData); // Log event data to check
+
+                    const eventDate = eventData.Date;  // Event date stored as string in YYYY-MM-DD format
+                    if (eventDate === todayFormatted) {
+                        eventsFound = true;
+                        eventsMessage += `<p>Event for today: ${eventData.Name} - ${eventData.Occasion} - ${eventData.Email}</p>`;
+               
+                        let customMessage = "";
+                        if (occasion === "Birthday") 
+                        {
+                            customMessage = `Happy Birthday, ${eventData.Name}! 🎉`;
+                            subject = "Happy Birthday";  // Customize the subject for birthday
+                            message = "Happy birthday! I hope all your birthday wishes and dreams come true.";  // Birthday message
+
+                        } 
+                        
+                        else if (occasion === "Anniversary") 
+                        {
+                            customMessage = `Happy Anniversary, ${eventData.Name}! 💍`;
+                            subject = "Happy Anniversary";  // Customize the subject for anniversary
+                            message = "Happy anniversary! Wishing you many more years of happiness and love.";  // Anniversary message
+                        }
+                        
+                        else 
+                        {
+                            customMessage = `${eventData.Name}'s event: ${occasion}`;
+                            //subject = `Special Reminder - ${eventsGName}`;
+                           // message = `Reminder to pay Insurance Premium, ${eventsGName}!`;
+                        }
+
+                        eventsMessage += `<p>${customMessage} - ${eventData.Email}</p>`;
+ 
+                        // Set recipient's email dynamically from Firestore data
+                        recipientEmail = eventData.Email;  // Use event's Email as recipient email
+                    }       
+                });
+
+                // If events found, display the event message and send an email
+                if (eventsFound) {
+                    document.getElementById('messageArea').innerHTML = `There are events today!<br>${eventsMessage}`;
+                    sendEmail(recipientEmail, eventsMessage);  // Send email with event details
+                } else {
+                    document.getElementById('messageArea').innerHTML = `No events for today.<br>Today's Date: ${todayFormatted}`;
+                }
+
+                document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner after processing
+
+            } catch (error) {
+                console.error("Error checking events:", error);
+                document.getElementById('messageArea').textContent = 'Error checking events. Please try again later.';
+                document.getElementById('messageArea').style.color = 'red';
+                document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
+            }
+        }
+ 
+
+        // Function to send an email using EmailJS
+        function sendEmail(recipientEmail, eventsMessage) {
+            const emailContent = `Today's Events: <br>${eventsMessage}`;
+            // Send email dynamically to the recipient using EmailJS
+            emailjs.send("service_jitwsrj", "template_m0u22pm", 
+            {
+                from_name: "Tavinder Arora",  // Hardcoded sender's name
+                to_name: "Tavinder Arora", 
+                from_email: "tpsarora@gmail.com",  // Hardcoded sender's email
+                email: "tavinder.arora@cnhind.com",  // Hardcoded sender's email
+                message: "message",
+
+            }).then(function(response) 
+            {
+                console.log('Success:', response);
+                document.getElementById('messageArea').textContent = 'Email sent successfully!';
+                document.getElementById('messageArea').style.color = 'green';
+            }, function(error) 
+            {
+                console.error('Error:', error);
+                document.getElementById('messageArea').textContent = 'Failed to send email.';
+                document.getElementById('messageArea').style.color = 'red';
+            });
+        }
+
+        // Run the check and email function as soon as the page loads
+        checkAndSendEmail();
+
+        // Initialize EmailJS with your user ID
+        emailjs.init("qcbXaXrWGMaIRt6_o");  // Replace with your actual EmailJS user ID
+    </script>
+</body>
+</html>

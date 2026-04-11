@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@emailjs/nodejs": "5.0.2",
+    "dotenv": "^16.0.3",
+    "emailjs-com": "^3.0.0",
+    "firebase-admin": "^13.0.2",
+    "twilio": "^5.5.2"
+  },
+  "name": "@emailjs/browser",
+  "version": "1.0.0",
+  "main": "sendEmail.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tpsarora/daily-email-scheduler.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tpsarora/daily-email-scheduler/issues"
+  },
+  "homepage": "https://github.com/tpsarora/daily-email-scheduler#readme",
+  "description": ""
+}

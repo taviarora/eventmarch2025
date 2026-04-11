@@ -1,0 +1,41 @@
+﻿name: Send Daily Emails
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "30 4 * * *"  # Runs daily at 4:30 AM UTC (10:00 AM IST)
+
+
+  # workflow_dispatch
+  # schedule:
+  #   - cron: "0 0 * * *" # Runs daily at midnight UTC
+  # schedule:
+  #   - cron: "53 20 * * *" # Runs daily at 8:53 PM UTC (2:23 AM IST)
+
+jobs:
+  send-emails:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Save Secret to File
+        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" | base64 --decode > firebase-service-account.json
+
+      - name: Run email script
+        run: node sendEmails.js
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+
+

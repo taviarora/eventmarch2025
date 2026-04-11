@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management</title>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"></script>
+    <style>
+        h1 {
+            color: #333;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        label {
+            margin-right: 10px;
+            width: 150px;
+        }
+
+        input {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: maroon;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkred;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: maroon;
+            color: white;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid white;
+            color: white
+        }
+
+        table td {
+            color: white
+        }
+
+        #messageArea {
+            margin: 10px 0;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Event Management</h1>
+        <div id="messageArea"></div>
+
+        <!-- Form to Add or Edit Event -->
+        <form id="editForm">
+            <h3>Add or Edit Event</h3>
+            <div class="form-group">
+                <label for="SNo">Serial Number:</label>
+                <input type="number" id="SNo" required>
+
+                <label for="Name">Name:</label>
+                <input type="text" id="Name" required>
+
+                <label for="G_Name">Greet Name:</label>
+                <input type="text" id="G_Name" required>
+
+                <label for="Occasion">Occasion:</label>
+                <select id="Occasion" required>
+                    <option value="">Select an Occasion</option>
+                    <option value="Birthday">Birthday</option>
+                    <option value="Anniversary">Anniversary</option>
+                    <option value="Reminder">Reminder</option>
+                </select>
+
+                <label for="Date">Date:</label>
+                <input type="date" id="Date" required>
+
+                <label for="Email">Email:</label>
+                <input type="email" id="Email" required>
+
+                <label for="Remarks">Remarks:</label>
+                <input type="text" id="Remarks">
+            </div>
+            <button type="submit">Save Event</button>
+        </form>
+
+        <h3>Event List</h3>
+        <table id="eventTable">
+            <thead>
+                <tr>
+                    <th>Serial Number</th>
+                    <th>Name</th>
+                    <th>Greet Name</th>
+                    <th>Occasion</th>
+                    <th>Date</th>
+                    <th>Email</th>
+                    <th>Remarks</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="eventList"></tbody>
+        </table>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfbqC-893YBqhgR5OR0eHyX-EXzCIoTC8",
+            authDomain: "jwdatabase-f0e20.firebaseapp.com",
+            databaseURL: "https://jwdatabase-f0e20-default-rtdb.firebaseio.com",
+            projectId: "jwdatabase-f0e20",
+            storageBucket: "jwdatabase-f0e20.appspot.com",
+            messagingSenderId: "1335908909",
+            appId: "1:1335908909:web:0c132d7c79008c490c36a4",
+            measurementId: "G-BQG1N754TN"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Function to get all events
+        async function getEvent() {
+            const eventList = document.getElementById("eventList");
+            eventList.innerHTML = "";
+
+            const eventCollection = collection(db, "Event");
+            try {
+                const snapshot = await getDocs(eventCollection);
+                if (snapshot.empty) {
+                    eventList.innerHTML = "<tr><td colspan='8'>No Events found.</td></tr>";
+                } else {
+                    const sortedDocs = snapshot.docs.sort((a, b) => {
+                const eventA = a.data();
+                const eventB = b.data();
+                return eventA.SNo - eventB.SNo; // Ascending order of SNo
+            });
+             // Loop through the sorted documents and create table rows
+                sortedDocs.forEach(doc => {
+                const eventData = doc.data();
+                const row = document.createElement("tr");
+
+                        // Date is already a string, so we can display it directly
+                        const eventDate = eventData.Date;
+
+                        row.innerHTML = `
+                            <td>${eventData.SNo}</td>
+                            <td>${eventData.Name}</td>
+                            <td>${eventData.G_Name}</td>
+                            <td>${eventData.Occasion}</td>
+                            <td>${eventDate}</td>  <!-- Display date as a string -->
+                            <td>${eventData.Email}</td>
+                            <td>${eventData.Remarks}</td>
+                            <td>
+                                <button onclick="editEvent('${doc.id}', ${JSON.stringify(eventData)})">Edit</button>
+                                <button onclick="deleteEvent('${doc.id}')">Delete</button>
+                            </td>
+                        `;
+                        eventList.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error("Error getting events:", error);
+                eventList.innerHTML = "<tr><td colspan='8'>Error loading Events.</td></tr>";
+            }
+        }
+
+        // Check if the Serial Number already exists in the database
+        async function checkDuplicateSNo(sno) {
+            const eventCollection = collection(db, "Event");
+            const q = query(eventCollection, where("SNo", "==", sno));
+            const querySnapshot = await getDocs(q);
+            return !querySnapshot.empty; // returns true if SNo exists
+        }
+
+        // Function to handle form submission (Add Event)
+        document.getElementById('editForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const sno = parseInt(document.getElementById("SNo").value);
+            const name = document.getElementById("Name").value;
+            const gName = document.getElementById("G_Name").value;
+            const OccasionType = document.getElementById("Occasion").value;
+            const date = document.getElementById("Date").value;  // Date is now a string (YYYY-MM-DD)
+            const email = document.getElementById("Email").value;
+            const remarks = document.getElementById("Remarks").value;
+
+            // Check for duplicate Serial Number
+            const isDuplicate = await checkDuplicateSNo(sno);
+            if (isDuplicate) {
+                showMessage("Error: Event with Serial Number " + sno + " already exists.", "red");
+                return; // Prevent form submission if duplicate exists
+            }
+
+            try {
+                await addDoc(collection(db, "Event"), {
+                    SNo: sno,
+                    Name: name,
+                    G_Name: gName,
+                    Occasion: OccasionType,
+                    Date: date, // Save as string in YYYY-MM-DD format
+                    Email: email,
+                    Remarks: remarks
+                });
+
+                showMessage("Event added successfully!");
+                getEvent();
+            } catch (error) {
+                console.error("Error adding event:", error);
+                showMessage("Error saving Event.", "red");
+            }
+        });
+
+        // Function to show messages
+        function showMessage(message, color = "green") {
+            const messageArea = document.getElementById("messageArea");
+            messageArea.textContent = message;
+            messageArea.style.color = color;
+        }
+
+        // Edit Event Function
+        window.editEvent = async function(docId, eventData) {
+            document.getElementById("SNo").value = eventData.SNo;
+            document.getElementById("Name").value = eventData.Name;
+            document.getElementById("G_Name").value = eventData.G_Name;
+            document.getElementById("Occasion").value = eventData.Occasion;
+            document.getElementById("Date").value = eventData.Date;  // Date is already a string
+            document.getElementById("Email").value = eventData.Email;
+            document.getElementById("Remarks").value = eventData.Remarks;
+
+            // Update form to allow updating existing record
+            document.getElementById('editForm').addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                const sno = parseInt(document.getElementById("SNo").value);
+                const name = document.getElementById("Name").value;
+                const gName = document.getElementById("G_Name").value;
+                const OccasionType = document.getElementById("Occasion").value;
+                const date = document.getElementById("Date").value;  // Date is now a string
+                const email = document.getElementById("Email").value;
+                const remarks = document.getElementById("Remarks").value;
+
+                try {
+                    await updateDoc(doc(db, "Event", docId), {
+                        SNo: sno,
+                        Name: name,
+                        G_Name: gName,
+                        Occasion: eventType,
+                        Date: date, // Store as string
+                        Email: email,
+                        Remarks: remarks
+                    });
+
+                    showMessage("Event updated successfully!");
+                    getEvent();
+                } catch (error) {
+                    console.error("Error updating event:", error);
+                    showMessage("Error updating Event.", "red");
+                }
+            });
+        };
+
+        // Delete Event Function
+        window.deleteEvent = async function(docId) {
+            const confirmation = confirm("Are you sure you want to delete this event?");
+            if (confirmation) {
+                try {
+                    await deleteDoc(doc(db, "Event", docId));
+                    showMessage("Event deleted successfully!");
+                    getEvent();
+                } catch (error) {
+                    console.error("Error deleting event:", error);
+                    showMessage("Error deleting Event.", "red");
+                }
+            }
+        };
+
+        // Load events when the page loads
+        getEvent();
+    </script>
+</body>
+</html>
+
+
+
+
+
