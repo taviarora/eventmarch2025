@@ -154,8 +154,8 @@
         if (occasion === "Reminder") {
           const eventDate = new Date(`${dataYear}-${dataMonth}-${dataDay}`);
           const reminderDate = new Date(eventDate);
-          reminderDate.setDate(reminderDate.getDate() - 2);
-
+          // reminderDate.setDate(reminderDate.getDate() - 2);
+   reminderDate.setDate(reminderDate.getDate());
   const reminderDay = reminderDate.getDate().toString().padStart(2, '0');
   const reminderMonth = (reminderDate.getMonth() + 1).toString().padStart(2, '0');
 
