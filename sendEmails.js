@@ -182,6 +182,7 @@
   async function sendEmail(toEmail, message, subject, fromname, toname, fileName, occasionvar) {
     try {
       console.log("Sending email to:", toEmail);
+      console.log(process.env);
 
       const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
@@ -193,10 +194,12 @@
           to_name: toname,
           from_email: "tpsarora@gmail.com",
           email: toEmail,
-          link: `https://taviarora.github.io/eventmarch2025/${occasionvar}/${fileName}`,
+          link: https://taviarora.github.io/eventmarch2025/${occasionvar}/${fileName},
         },
         {
-      privateKey: process.env.EMAILJS_PRIVATE_KEY
+          publicKey: "qcbXaXrWGMaIRt6_o",
+      privateKey: "g1HH-DK2771AldTTDT3Tk"
+          
         }
       );
 
