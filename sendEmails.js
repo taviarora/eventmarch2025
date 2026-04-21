@@ -194,7 +194,7 @@
           to_name: toname,
           from_email: "tpsarora@gmail.com",
           email: toEmail,
-          link: https://taviarora.github.io/eventmarch2025/${occasionvar}/${fileName},
+          link: `https://taviarora.github.io/eventmarch2025/${occasionvar}/${fileName}`,
         },
         {
           publicKey: "qcbXaXrWGMaIRt6_o",
