@@ -107,103 +107,149 @@
             <h3>Add or Edit Event</h3>
             <div class="form-group">
 
+
+
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <label for="SNo" style="width:150px; margin:0;">Serial Number:</label>
+                    <input type="number" id="SNo" required readonly style="flex:1; margin:0;">
+                </div>
+
+
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <label for="Occasion" style="width:150px; margin:0;">Occasion:</label>
+
+                    <select id="Occasion" required style="flex:1; margin:0;">
+                        <option value="">Select an Occasion</option>
+                        <option value="Reminder-Self">Reminder-Self</option>
+                        <option value="Reminder-Birthday">Reminder-Birthday</option>
+                        <option value="Reminder-Anniversary">Reminder-Anniversary</option>
+                        <option value="Birthday">Birthday</option>
+                        <option value="Anniversary">Anniversary</option>
+                        <option value="Reminder">Reminder</option>
+                    </select>
+                </div>
+
                 <div id="otherFields">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                        <label for="From_Name" style="width:150px; margin:0;">From Name:</label>
 
-  <label for="SNo">Serial Number:</label>
+                        <select id="From_Name" required style="flex:1; margin:0;">
+                            <option value="">Select Name</option>
+                            <option value="Tavinder Arora">Tavinder Arora</option>
+                            <option value="Tavinder">Tavinder</option>
+                            <option value="Preeti">Preeti</option>
+                        </select>
+                    </div>
 
-                <select id="Occasion" required>
-                    <br>
-                    <option value="">Select an Occasion</option>
-                    <option value="Reminder-Self">Reminder-Self</option>
-                    <option value="Reminder-Birthday">Reminder-Birthday</option>
-                    <option value="Reminder-Anniversary">Reminder-Anniversary</option>
-                    <option value="Birthday">Birthday</option>
-                    <option value="Anniversary">Anniversary</option>
-                    <option value="Reminder">Reminder</option>
-                </select>
-                <br>
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                        <label for="From_Email" style="width:150px; margin:0;">From Email:</label>
 
-                <input type="number" id="SNo" required readonly>
-                <br>
-                <label for="From_Name">From Name:</label>
-                <select id="From_Name" required>
-                    <option value="">Select Name</option>
-                    <option value="Tavinder Arora">Tavinder Arora</option>
-                    <option value="Tavinder">Tavinder</option>
-                    <option value="Preeti">Preeti</option>
-                </select>
-                <br>
-                <label for="From_Email">From Email:</label>
-                <select id="From_Email" required>
-                    <br>
-                    <option value="">Select Email</option>
-                    <option value="tpsarora@gmail.com">tpsarora@gmail.com</option>
-                    <option value="tpsa@rediffmail.com">tpsa@rediffmail.com</option>
-                </select>
-                <br>
-                <label for="From_Mobile">From Mobile:</label>
-                <select id="From_Mobile" required>
-                    <br>
-                    <option value="">Select Mobile Number</option>
-                    <option value="+919810607799">+919810607799</option>
-                    <option value="+971521821108">+971521821108</option>
-                    <option value="+919810132799">+919810132799</option>
-                </select>
+                        <select id="From_Email" required style="flex:1; margin:0;">
+                            <option value="">Select Email</option>
+                            <option value="tpsarora@gmail.com">tpsarora@gmail.com</option>
+                            <option value="tpsa@rediffmail.com">tpsa@rediffmail.com</option>
+                        </select>
+                    </div>
 
-                <br>
-                <label for="To_Name">To Name:</label>
-                <input type="text" id="To_Name" required>
-                <br>
-                <br>
-                <label for="To_Gname">Greet Name:</label>
-                <input type="text" id="To_Gname" required>
-                <br>
-                <br>
-                <label for="To_Email">To Email:</label>
-                <input type="text" id="To_Email" required>
-                <br>
-                <br>
-                <label for="To_Mobile">To Mobile:</label>
-                <input type="text" id="To_Mobile" required>
-                <br>
-                <br>
-                <label for="Occasion">Occasion:</label>
-                
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                        <label for="From_Mobile" style="width:150px; margin:0;">From Mobile:</label>
 
-</div>
-              
+                        <select id="From_Mobile" required style="flex:1; margin:0;">
+                            <option value="">Select Mobile Number</option>
+                            <option value="+919810607799">+919810607799</option>
+                            <option value="+971521821108">+971521821108</option>
+                            <option value="+919810132799">+919810132799</option>
+                        </select>
+                    </div>
 
-<div id="reminderField">
-    <label for="Reminder_Message">Reminder Message:</label>
-    <input type="text" id="Reminder_Message" required>
-</div>
-              <br>               
-   
 
-                <label for="Recurring">Recurring:</label>
-                <select id="Recurring" required>
-                    <br>
-                    <option value="">Recurring</option>
-                    <option value="Yearly">Yearly</option>
-                    <option value="Monthly">Monthly</option>
-                    <option value="Weekly">Weekly</option>
-                </select>
-                <br>
 
-                <label for="Relation">Relation:</label>
-                <select id="Relation" required>
-                    <br>
-                    <option value="">Relation</option>
-                    <option value="Father">Father</option>
-                    <option value="Mother">Mother</option>
-                    <option value="Brother">Brother</option>
-                    <option value="Sister">Sister</option>
-                    <option value="Friend">Friend</option>
-                    <option value="Self">Self</option>
-                </select>
-                <br>
-                <label for="Date">Date:</label>
-                <input type="date" id="Date" required>
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                        <label for="To_Gname" style="width:150px; margin:0;">Greet Name:</label>
+                        <input type="text" id="To_Gname" required style="flex:1; margin:0;">
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                        <label for="To_Email" style="width:150px; margin:0;">To Email:</label>
+                        <input type="text" id="To_Email" required style="flex:1; margin:0;">
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                        <label for="To_Mobile" style="width:150px; margin:0;">To Mobile:</label>
+                        <input type="text" id="To_Mobile" required style="flex:1; margin:0;">
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div id="extraFields">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <label for="Recurring" style="width:150px; margin:0;">Recurring:</label>
+
+                    <select id="Recurring" required style="flex:1; margin:0;">
+                        <option value="">Recurring</option>
+                        <option value="Yearly">Yearly</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Weekly">Weekly</option>
+                    </select>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <label for="Relation" style="width:150px; margin:0;">Relation:</label>
+
+                    <select id="Relation" required style="flex:1; margin:0;">
+                        <option value="">Relation</option>
+                        <option value="Father">Father</option>
+                        <option value="Mother">Mother</option>
+                        <option value="Brother">Brother</option>
+                        <option value="Sister">Sister</option>
+                        <option value="Friend">Friend</option>
+                        <option value="Self">Self</option>
+                    </select>
+                </div>
+            </div>
+            <div id="nameField">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <label for="To_Name" style="width:150px; margin:0;">To Name:</label>
+                    <input type="text" id="To_Name" required style="flex:1; margin:0;">
+                </div>
+
+            </div>
+            <!-- <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                            <label for="Recurring" style="width:150px; margin:0;">Recurring:</label>
+
+                            <select id="Recurring" required style="flex:1; margin:0;">
+                                <option value="">Recurring</option>
+                                <option value="Yearly">Yearly</option>
+                                <option value="Monthly">Monthly</option>
+                                <option value="Weekly">Weekly</option>
+                            </select>
+                        </div>
+
+
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                            <label for="Relation" style="width:150px; margin:0;">Relation:</label>
+
+                            <select id="Relation" required style="flex:1; margin:0;">
+                                <option value="">Relation</option>
+                                <option value="Father">Father</option>
+                                <option value="Mother">Mother</option>
+                                <option value="Brother">Brother</option>
+                                <option value="Sister">Sister</option>
+                                <option value="Friend">Friend</option>
+                                <option value="Self">Self</option>
+                            </select>
+                        </div> -->
+            <div id="remindermessageField">
+                <div id="reminderField" style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <label for="Reminder_Message" style="width:150px; margin:0;">Reminder Message:</label>
+                    <input type="text" id="Reminder_Message" required style="flex:1; margin:0;">
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <label for="Date" style="width:150px; margin:0;">Date:</label>
+                <input type="date" id="Date" required style="flex:1; margin:0;">
             </div>
             <button type="submit">Save Event</button>
         </form>
@@ -286,7 +332,7 @@
             try {
                 const snapshot = await getDocs(eventCollection);
                 if (snapshot.empty) {
-                    eventList.innerHTML = "<tr><td colspan='10'>No Events found.</td></tr>";
+                    eventList.innerHTML = "<tr><td colspan='13'>No Events found.</td></tr>";
                 } else {
                     const sortedDocs = snapshot.docs.sort((a, b) => {
                         const eventA = a.data();
@@ -300,30 +346,30 @@
 
                         row.innerHTML = `
 
-                            <td>${eventData.SNo}</td>
-                            <td>${eventData.Occasion}</td>
-                            <td>${eventData.From_Name}</td>
-                            <td>${eventData.From_Email}</td>
-                            <td>${eventData.From_Mobile}</td>
-                            <td>${eventData.To_Name}</td>
-                            <td>${eventData.To_Gname}</td>
-                            <td>${eventData.To_Email}</td>
-                            <td>${eventData.To_Mobile}</td>
-                            <td>${eventData.Relation}</td>
-                            <td>${eventData.Recurring}</td>
-                            <td>${eventData.Reminder_Message}</td>
-                            <td>${eventData.Date}</td>
-                            <td>
-                                <button onclick="editEvent('${doc.id}', '${encodeURIComponent(JSON.stringify(eventData))}')">Edit</button>
-                                <button onclick="deleteEvent('${doc.id}')">Delete</button>
-                            </td>
-                        `;
+                                    <td>${eventData.SNo}</td>
+                                    <td>${eventData.Occasion}</td>
+                                    <td>${eventData.From_Name}</td>
+                                    <td>${eventData.From_Email}</td>
+                                    <td>${eventData.From_Mobile}</td>
+                                    <td>${eventData.To_Name}</td>
+                                    <td>${eventData.To_Gname}</td>
+                                    <td>${eventData.To_Email}</td>
+                                    <td>${eventData.To_Mobile}</td>
+                                    <td>${eventData.Relation}</td>
+                                    <td>${eventData.Recurring}</td>
+                                    <td>${eventData.Reminder_Message}</td>
+                                    <td>${eventData.Date}</td>
+                                    <td>
+                                        <button onclick="editEvent('${doc.id}', '${encodeURIComponent(JSON.stringify(eventData))}')">Edit</button>
+                                        <button onclick="deleteEvent('${doc.id}')">Delete</button>
+                                    </td>
+                                `;
                         eventList.appendChild(row);
                     });
                 }
             } catch (error) {
                 console.error("Error getting events:", error);
-                eventList.innerHTML = "<tr><td colspan='10'>Error loading Events.</td></tr>";
+                eventList.innerHTML = "<tr><td colspan='13'>Error loading Events.</td></tr>";
             }
         }
 
@@ -338,84 +384,116 @@
         // Form submission handler (Add or Update event)
 
         document.getElementById("Occasion").addEventListener("change", function () {
-    const occasion = this.value;
+            const occasion = this.value;
 
-    const fromName = document.getElementById("From_Name");
-    const fromEmail = document.getElementById("From_Email");
-    const fromMobile = document.getElementById("From_Mobile");
-    const toName = document.getElementById("To_Name");
-    const toGname = document.getElementById("To_Gname");
-    const toEmail = document.getElementById("To_Email");
-    const toMobile = document.getElementById("To_Mobile");
-    const relation = document.getElementById("Relation");
-    const recurring = document.getElementById("Recurring");
-    const reminderMessage = document.getElementById("Reminder_Message");
+            const otherFields = document.getElementById("otherFields");
+            const extraFields = document.getElementById("extraFields");
+            const nameField = document.getElementById("nameField");
+            const remindermessageField = document.getElementById("remindermessageField");
 
-    function disableAll(flag) {
-        fromName.disabled = flag;
-        fromEmail.disabled = flag;
-        fromMobile.disabled = flag;
-        toName.disabled = flag;
-        toGname.disabled = flag;
-        toEmail.disabled = flag;
-        toMobile.disabled = flag;
-        relation.disabled = flag;
-        recurring.disabled = flag;
-        reminderMessage.disabled = false;
-    }
+            const fromName = document.getElementById("From_Name");
+            const fromEmail = document.getElementById("From_Email");
+            const fromMobile = document.getElementById("From_Mobile");
+            const toName = document.getElementById("To_Name");
+            const toGname = document.getElementById("To_Gname");
+            const toEmail = document.getElementById("To_Email");
+            const toMobile = document.getElementById("To_Mobile");
+            const relation = document.getElementById("Relation");
+            const recurring = document.getElementById("Recurring");
+            const reminderMessage = document.getElementById("Reminder_Message");
 
-    // reset first
-    disableAll(false);
+            function disableAll(flag) {
+                fromName.disabled = flag;
+                fromEmail.disabled = flag;
+                fromMobile.disabled = flag;
+                // toName.disabled = flag;
+                toGname.disabled = flag;
+                toEmail.disabled = flag;
+                toMobile.disabled = flag;
+                relation.disabled = flag;
+                recurring.disabled = flag;
+                // reminderMessage.disabled = flag;
+            }
 
-    if (occasion === "Reminder-Self") {
-        fromName.value = "Tavinder";
-        fromEmail.value = "tpsarora@gmail.com";
-        fromMobile.value = "+919810607799";
+            // reset first
+            disableAll(false);
 
-        toName.value = "Tavinder";
-        toGname.value = "Tavi";
-        toEmail.value = "tpsarora@gmail.com";
-        toMobile.value = "0981067799";
+            if (occasion === "Reminder-Self") {
 
-        relation.value = "Self";
-        recurring.value = "Yearly";
+                // Hide all fields except Reminder Message and Date
+                otherFields.style.display = "none";
+                extraFields.style.display = "none";
+                nameField.style.display = "none";
 
-        disableAll(true);
-        reminderMessage.focus();
-    }
+                fromName.value = "Tavinder";
+                fromEmail.value = "tpsarora@gmail.com";
+                fromMobile.value = "+919810607799";
 
-    if (occasion === "Reminder-Birthday") {
-        fromName.value = "Tavinder";
-        fromEmail.value = "tpsarora@gmail.com";
-        fromMobile.value = "+919810607799";
+                toName.value = "Tavinder";
+                toGname.value = "Tavi";
+                toEmail.value = "tpsarora@gmail.com";
+                toMobile.value = "0981067799";
 
-        reminderMessage.value = "Birthday reminder";
-        toGname.value = "Tavi";
-        toEmail.value = "tpsarora@gmail.com";
-        toMobile.value = "0981067799";
+                relation.value = "Self";
+                recurring.value = "Yearly";
 
-        relation.value = "Self";
-        recurring.value = "Yearly";
+                disableAll(true);
+                reminderMessage.focus();
+            }
 
-        disableAll(true);
-    }
+            else if (occasion === "Reminder-Birthday") {
 
-    if (occasion === "Reminder-Anniversary") {
-        fromName.value = "Tavinder";
-        fromEmail.value = "tpsarora@gmail.com";
-        fromMobile.value = "+919810607799";
+                otherFields.style.display = "none";
+                extraFields.style.display = "none";
+                remindermessageField.style.display = "none";
 
-        reminderMessage.value = "Anniversary reminder";
-        toGname.value = "Tavi";
-        toEmail.value = "tpsarora@gmail.com";
-        toMobile.value = "0981067799";
 
-        relation.value = "Self";
-        recurring.value = "Yearly";
 
-        disableAll(true);
-    }
-}); 
+                fromName.value = "Tavinder";
+                fromEmail.value = "tpsarora@gmail.com";
+                fromMobile.value = "+919810607799";
+
+                reminderMessage.value = "Birthday reminder";
+                toGname.value = "Tavi";
+                toEmail.value = "tpsarora@gmail.com";
+                toMobile.value = "0981067799";
+
+                relation.value = "Self";
+                recurring.value = "Yearly";
+
+                disableAll(true);
+                toName.focus();
+            }
+
+            else if (occasion === "Reminder-Anniversary") {
+
+                otherFields.style.display = "none";
+                extraFields.style.display = "none";
+                remindermessageField.style.display = "none";
+
+                fromName.value = "Tavinder";
+                fromEmail.value = "tpsarora@gmail.com";
+                fromMobile.value = "+919810607799";
+
+                reminderMessage.value = "Anniversary reminder";
+                toGname.value = "Tavi";
+                toEmail.value = "tpsarora@gmail.com";
+                toMobile.value = "0981067799";
+
+                relation.value = "Self";
+                recurring.value = "Yearly";
+
+                disableAll(true);
+                toName.focus();
+            }
+        });
+        function showAllFields() {
+            document.getElementById("otherFields").style.display = "block";
+            document.getElementById("extraFields").style.display = "block";
+            document.getElementById("nameField").style.display = "block";
+            document.getElementById("remindermessageField").style.display = "block";
+        }
+
         document.getElementById('editForm').addEventListener('submit', async function (event) {
             event.preventDefault();
 
@@ -434,6 +512,7 @@
             const Recurring1 = document.getElementById("Recurring").value;
             const Reminder_Message1 = document.getElementById("Reminder_Message").value;
             const date = document.getElementById("Date").value;
+
 
             if (currentDocId) {
                 // Edit Event
@@ -509,6 +588,11 @@
             currentDocId = null;
             document.getElementById('editForm').reset();
             document.querySelector("button[type='submit']").textContent = "Save Event";
+            // 🔥 IMPORTANT: restore hidden fields
+            showAllFields();
+
+            const inputs = document.querySelectorAll("input, select");
+            inputs.forEach(el => el.disabled = false);
             setNextSNo();
         }
 
