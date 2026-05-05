@@ -129,25 +129,32 @@ async function checkAndSendEmails() {
                 if (data.Occasion === "Birthday") {
                     subject = `Happy Birthday ${data.To_Name}`;
                     message = "Wishing you a wonderful birthday!";
-                } else if (data.Occasion === "Anniversary") {
+                } 
+                
+                else if (data.Occasion === "Anniversary") {
                     subject = `Happy Anniversary ${data.To_Name}`;
                     message = "Wishing you a joyful anniversary!";
                 }
                 else if (data.Occasion === "Reminder-Self") {
                     subject = `Self Reminder ${data.Reminder_Message}`;
-                    message = "Wishing you a joyful anniversary!";
+                    message = `Self Reminder ${data.Reminder_Message}`;
                 }
                 else if (data.Occasion === "Reminder") {
                     subject = `"Reminder ${data.To_Name}`;
                     message = "Wishing you a joyful anniversary!";
                 }
+
+
                 else if (data.Occasion === "Reminder-Birthday") {
                     subject = `Reminder-Birthday ${data.To_Name}`;
-                    message = 'Birthday Wishes for  ${data.Reminder_Message}';
+                    message = 'Birthday Wishes for  ${data.To_Name}';
                 }
+
+
+
                      else if (data.Occasion === "Reminder-Anniversary") {
                     subject = `Reminder-Anniversary ${data.To_Name}`;
-                    message = 'Anniversary Wishes for  ${data.Reminder_Message}';
+                    message = 'Anniversary Wishes for  ${data.To_Name}';
                 }
 
                 sendEmail(data.To_Email, subject, message, data.To_Gname);
