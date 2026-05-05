@@ -133,6 +133,22 @@ async function checkAndSendEmails() {
                     subject = `Happy Anniversary ${data.To_Name}`;
                     message = "Wishing you a joyful anniversary!";
                 }
+                else if (data.Occasion === "Reminder-Self") {
+                    subject = `Self Reminder ${data.Reminder_Message}`;
+                    message = "Wishing you a joyful anniversary!";
+                }
+                else if (data.Occasion === "Reminder") {
+                    subject = `"Reminder ${data.To_Name}`;
+                    message = "Wishing you a joyful anniversary!";
+                }
+                else if (data.Occasion === "Reminder-Birthday") {
+                    subject = `Reminder-Birthday ${data.To_Name}`;
+                    message = 'Birthday Wishes for  ${data.Reminder_Message}';
+                }
+                     else if (data.Occasion === "Reminder-Anniversary") {
+                    subject = `Reminder-Anniversary ${data.To_Name}`;
+                    message = 'Anniversary Wishes for  ${data.Reminder_Message}';
+                }
 
                 sendEmail(data.To_Email, subject, message, data.To_Gname);
             }
@@ -160,6 +176,7 @@ function sendEmail(toEmail, subject, message, name) {
         subject: subject,
         message: message,
         email: toEmail
+  
     })
     .then(res => console.log("Email sent", res))
     .catch(err => console.error("Error", err));
