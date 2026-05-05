@@ -147,14 +147,14 @@ async function checkAndSendEmails() {
 
                 else if (data.Occasion === "Reminder-Birthday") {
                     subject = `Reminder-Birthday ${data.To_Name}`;
-                    message = 'Birthday Wishes for  ${data.To_Name}';
+                    message = `Birthday Wishes for  ${data.To_Name}`;
                 }
 
 
 
                      else if (data.Occasion === "Reminder-Anniversary") {
                     subject = `Reminder-Anniversary ${data.To_Name}`;
-                    message = 'Anniversary Wishes for  ${data.To_Name}';
+                    message = `Anniversary Wishes for  ${data.To_Name}`;
                 }
 
                 sendEmail(data.To_Email, subject, message, data.To_Gname);
