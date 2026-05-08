@@ -1,198 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Event Planner</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Planner</title>
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f4f4f4;
-}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+        }
 
-.container {
-    text-align: center;
-    padding: 20px;
-    width: 90%;
-    max-width: 400px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-}
+        .container {
+            text-align: center;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
 
-button {
-    width: 100%;
-    background-color: #5a0404;
-    color: white;
-    padding: 12px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
-}
+        button {
+            width: 100%;
+            background-color: #5a0404;
+            color: white;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
 
-button:hover {
-    background-color: #45a049;
-}
+        button:hover {
+            background-color: #45a049;
+        }
 
-.message {
-    margin-top: 15px;
-    font-size: 16px;
-}
+        .message {
+            margin-top: 15px;
+            font-size: 16px;
+        }
 
-#loadingSpinner {
-    display: none;
-    margin-top: 10px;
-}
-</style>
+        #loadingSpinner {
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
-    <h2>Event Planner</h2>
+    <div class="container">
+        <h2>Event Planner</h2>
 
-    <div id="loadingSpinner">Loading...</div>
-    <div id="messageArea" class="message"></div>
+        <div id="loadingSpinner">Loading...</div>
+        <div id="messageArea" class="message"></div>
 
-    <button onclick="AddEventsButton()">Add Event</button>
-    <button onclick="ModifytableButton()">Modify Table</button>
-    <button onclick="ListData()">List Data</button>
-    <button onclick="checkAndSendEmails()">Check Today's Events</button>
-</div>
+        <button onclick="AddEventsButton()">Add Event</button>
+        <button onclick="ModifytableButton()">Modify Table</button>
+        <button onclick="ListData()">List Data</button>
+        <button onclick="checkAndSendEmails()">Check Today's Events</button>
+    </div>
 
-<!-- EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-<script>
-function AddEventsButton() {
-    window.open('Event-Edit-Final.html');
-}
-
-function ModifytableButton() {
-    window.open('Event-Table-Edit_1.html');
-}
-
-function ListData() {
-    window.open('Event-List.html');
-}
-</script>
-
-<!-- Firebase + Main Logic -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
-
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "jwdatabase-f0e20.firebaseapp.com",
-    projectId: "jwdatabase-f0e20"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Initialize EmailJS
-emailjs.init("qcbXaXrWGMaIRt6_o");
-
-async function checkAndSendEmails() {
-    const spinner = document.getElementById('loadingSpinner');
-    const msg = document.getElementById('messageArea');
-
-    spinner.style.display = 'block';
-    msg.innerHTML = "";
-
-    try {
-        const today = new Date().toISOString().split('T')[0];
-
-        const querySnapshot = await getDocs(collection(db, "Event"));
-
-        let found = false;
-
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-
-            if (data.Date === today) {
-                found = true;
-
-                let subject = "";
-                let message = "";
-
-                if (data.Occasion === "Birthday") {
-                    subject = `Happy Birthday ${data.To_Name}`;
-                    message = "Wishing you a wonderful birthday!";
-                } 
-                
-                else if (data.Occasion === "Anniversary") {
-                    subject = `Happy Anniversary ${data.To_Name}`;
-                    message = "Wishing you a joyful anniversary!";
-                }
-                else if (data.Occasion === "Reminder-Self") {
-                    subject = `Self Reminder ${data.Reminder_Message}`;
-                    message = `Self Reminder ${data.Reminder_Message}`;
-                }
-                else if (data.Occasion === "Reminder") {
-                    subject = `"Reminder ${data.To_Name}`;
-                    message = "Wishing you a joyful anniversary!";
-                }
-
-
-                else if (data.Occasion === "Reminder-Birthday") {
-                    subject = `Reminder-Birthday ${data.To_Name}`;
-                    message = `Birthday Wishes for  ${data.To_Name}`;
-                }
-
-
-
-                     else if (data.Occasion === "Reminder-Anniversary") {
-                    subject = `Reminder-Anniversary ${data.To_Name}`;
-                    message = `Anniversary Wishes for  ${data.To_Name}`;
-                }
-
-                sendEmail(data.To_Email, subject, message, data.To_Gname);
-            }
-        });
-
-        if (!found) {
-            msg.innerHTML = "No events today.";
-        } else {
-            msg.innerHTML = "Emails sent successfully!";
-            msg.style.color = "green";
+    <script>
+        function AddEventsButton() {
+            window.open('01-Event-Edit-Final.html');
         }
 
-    } catch (error) {
-        console.error(error);
-        msg.innerHTML = "Error occurred.";
-        msg.style.color = "red";
-    }
+        function ModifytableButton() {
+            window.open('02-Event-Table-Edit.html');
+        }
 
-    spinner.style.display = 'none';
-}
+        function ListData() {
+            window.open('03-Event-List.html');
+        }
+    </script>
 
-function sendEmail(toEmail, subject, message, name) {
-    emailjs.send("service_jitwsrj", "template_m0u22pm", {
-        to_name: name,
-        subject: subject,
-        message: message,
-        email: toEmail
-  
-    })
-    .then(res => console.log("Email sent", res))
-    .catch(err => console.error("Error", err));
-}
+    <!-- Firebase + Main Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
-// Make function global
-window.checkAndSendEmails = checkAndSendEmails;
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "jwdatabase-f0e20.firebaseapp.com",
+            projectId: "jwdatabase-f0e20"
+        };
 
-</script>
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const BirthdayMessages = [
+            "Wishing you a birthday filled with joy, love, and laughter.",
+            "Happy Birthday! May your day be as wonderful as you are.",
+            "Wishing you happiness today and always. Happy Birthday!",
+            "May this special day bring you endless smiles and beautiful memories.",
+            "Happy Birthday! Wishing you health, success, and happiness.",
+            "Another year older, another year brighter. Happy Birthday!",
+            "Hope your birthday is filled with love, laughter, and good cheer.",
+            "Wishing you a day as special as your heart. Happy Birthday!",
+            "Happy Birthday! May all your dreams come true this year.",
+            "Sending warm wishes for a truly wonderful birthday.",
+            "May your birthday bring you peace, happiness, and countless blessings.",
+            "Happy Birthday! Enjoy every moment of your special day.",
+            "Wishing you a year full of joy and beautiful surprises.",
+            "Happy Birthday! May your smile shine brighter than ever today.",
+            "Hope your birthday is filled with unforgettable moments.",
+            "Wishing you love, laughter, and happiness on your birthday.",
+            "Happy Birthday! May every hour of today bring you joy.",
+            "Wishing you another year of success and cherished memories.",
+            "Happy Birthday! Celebrate big and smile even bigger.",
+            "May your birthday be filled with sunshine and happiness.",
+            "Happy Birthday! Wishing you love and laughter all year long.",
+            "May this birthday be the beginning of your best year yet.",
+            "Wishing you a birthday full of warmth, love, and joy.",
+            "Happy Birthday! May life bless you with endless happiness.",
+            "Hope your special day is as amazing as you are.",
+            "Happy Birthday! Here’s to another year of wonderful adventures.",
+            "Wishing you a birthday filled with sweet moments and happy memories.",
+            "Happy Birthday! May every wish you make come true.",
+            "Sending heartfelt wishes for a bright and beautiful birthday.",
+            "Wishing you happiness today and success in the year ahead.",
+            "Happy Birthday! May today bring you everything that makes you smile.",
+            "Wishing you love, peace, and laughter on your special day.",
+            "Happy Birthday! Enjoy every moment and make beautiful memories.",
+            "May your birthday be as joyful and lovely as your heart.",
+            "Wishing you a day filled with blessings and cheerful moments.",
+            "Happy Birthday! May this year bring you new hopes and new joys.",
+            "Wishing you endless happiness on your birthday and beyond.",
+            "Happy Birthday! Celebrate the wonderful person you are.",
+            "Hope today is filled with love, fun, and happy surprises.",
+            "Wishing you health, happiness, and many reasons to smile.",
+            "Happy Birthday! May your life be filled with love and laughter.",
+            "Wishing you a beautiful birthday and a fantastic year ahead.",
+            "Happy Birthday! May your heart be filled with joy today.",
+            "Wishing you countless blessings on your special day.",
+            "Happy Birthday! May your dreams take flight this year.",
+            "Wishing you sunshine, smiles, and happiness on your birthday.",
+            "Happy Birthday! May every moment today be truly special.",
+            "Wishing you love, success, and joy in abundance.",
+            "Happy Birthday! May your day be full of sweet surprises.",
+            "Wishing you a very happy birthday and a year full of blessings."
+        ];
+
+        const BirthdayImageLinks = [
+            "https://drive.google.com/uc?export=view&id=15xUeHLWTigj0F8ZHN9gbGECPcnBTp53U",
+            "https://drive.google.com/uc?export=view&id=1NF86srWm7HAdiY0gf_gFkdWcl8ZVBxTt",
+            "https://drive.google.com/uc?export=view&id=1UV3ueC0B3pBE1omRSTRrAozH3qZ-LnpH",
+            "https://drive.google.com/uc?export=view&id=14KBLiCd_EsXgJcmJulwzXhp5j4I5oELD",
+            "https://drive.google.com/uc?export=view&id=1GnXEZF-NUdUbEirScGkS_arEdEHcJ9hw",
+            "https://drive.google.com/uc?export=view&id=1qx09HbjHufA7kAi5O-L9fAethmQHnd1W",
+            "https://drive.google.com/uc?export=view&id=13C85jaJbb6kpQnFIQBejAVOhEpE6IdAi",
+            "https://drive.google.com/uc?export=view&id=1hP4dx7KfyqOAS3R85xUFcbcjFgTlMrtZ",
+            "https://drive.google.com/uc?export=view&id=1fEYr6ZSiz5lgKhe5MA_GbJHYmLp3790h",
+            "https://drive.google.com/uc?export=view&id=1_D86glWMfevsacqNI8VCzahp5i-EchGP",
+            "https://drive.google.com/uc?export=view&id=1gEiDlCplTqk0SM88uyu0Z_pxqpDjydKa",
+            "https://drive.google.com/uc?export=view&id=1PUCcgt3NntP-LAlHq61_w4pBam9RrmSk",
+            "https://drive.google.com/uc?export=view&id=1OoV9NjyoyO4eUlmQjbGdOIz4lL5ekqPj",
+            "https://drive.google.com/uc?export=view&id=19hQlA66XEnbSNlba4ppYXUHrfqZq1yST",
+            "https://drive.google.com/uc?export=view&id=1yih6CNvas0X_mYJHBbLcD_Hb78aJQb_x",
+            "https://drive.google.com/uc?export=view&id=1Tmc38J9Wn00ODLSbY3YYgTX41vsLE9Uo",
+            "https://drive.google.com/uc?export=view&id=1ypyV9L3gF7HnucBEO7ZL1Ziuauye-os9",
+            "https://drive.google.com/uc?export=view&id=1L7gGcCHN_miJqeGs4MWlqZQ-vQvd-vDO",
+            "https://drive.google.com/uc?export=view&id=1BaJITPrzKbyObQK71U8FkGrOWswJdZLe",
+            "https://drive.google.com/uc?export=view&id=1ScCZx38L9Gd3CqwouA_yRhWHtmAHbCrQ",
+            "https://drive.google.com/uc?export=view&id=1MvqalcC3RLlazLs16sF7CcBxLuFEARGq",
+            "https://drive.google.com/uc?export=view&id=1g2ffqnup8oVCFtb9MkahFcqgRKtRSo5O",
+            "https://drive.google.com/uc?export=view&id=1pxj3f2tKYGEZc33xX79GEekweNVAQEpD",
+            "https://drive.google.com/uc?export=view&id=1F4o3ZJnP263VfBK6lBa0L4Bg_3P7Xk4f",
+            "https://drive.google.com/uc?export=view&id=1goQniT3sb17dmHNW1HEOeNY9AoosMccf",
+            "https://drive.google.com/uc?export=view&id=1OSdO25QJpMjuAZid8OUEZQnGWZGeIShP",
+            "https://drive.google.com/uc?export=view&id=1oze41XATI_MaENPSCnE1mpunX--2_XHY",
+            "https://drive.google.com/uc?export=view&id=11crymdFTfuYj44LZ8IDNLQtI6hDWxPDc",
+            "https://drive.google.com/uc?export=view&id=1SJzec_o1DI4V7p18nV5YG-RUlFvUtn2w",
+            "https://drive.google.com/uc?export=view&id=1J7vne90YSTViW1Iu1RCVwuIz56m_uNTG",
+            "https://drive.google.com/uc?export=view&id=1wR0x8GSrBixAgGdLHgUQAaITuSaeTSzx",
+            "https://drive.google.com/uc?export=view&id=1_xNA2A5l6MCTqP_Iq7w-SDADUiohucuR",
+            "https://drive.google.com/uc?export=view&id=1ULCSQ1SBqD6wC2n0-VSEiA8hgHctfH08",
+            "https://drive.google.com/uc?export=view&id=1LSbOB4ZaCVVWKVC2D1mmxiIi64s5bQAD",
+            "https://drive.google.com/uc?export=view&id=1GaeR-nQFcGCUsEq6gvVHo7saRPhlvh4I",
+            "https://drive.google.com/uc?export=view&id=1jLEt33sA4aTpbf3aLrHpCCKsNxSiDr45",
+            "https://drive.google.com/uc?export=view&id=1DuFv9OJJTNS80NspiQSeFVGp4rm-NptM",
+            "https://drive.google.com/uc?export=view&id=1QY0Sp8_mTOkv7Fskhbhbmpcf2Hg2uHHe",
+            "https://drive.google.com/uc?export=view&id=1xRtMd87h8VCZO-Eb4seuSJ51T9Ahye7L",
+            "https://drive.google.com/uc?export=view&id=1IXNqK-lxLXlR4_0XSORY_bo5pehJk87t",
+            "https://drive.google.com/uc?export=view&id=164ze9hnmHPVlW9iQUrnDq-ojzG_4jSSQ",
+            "https://drive.google.com/uc?export=view&id=1rb_ximr1n-nkCn4mejk-MaDaD8SwB41M",
+            "https://drive.google.com/uc?export=view&id=1rp8SFGkT_BhO5q1GeO5sjKD3H-3X3Cy2",
+            "https://drive.google.com/uc?export=view&id=12X9e8v3URamxcflOx6E-yHtCicZf07jf",
+            "https://drive.google.com/uc?export=view&id=114kp-4_1bStkN4kk7jxmokqt-JggWCYx"
+        ];
+
+        const AnniversaryMessages = [
+            "Wishing you a lifetime of love, joy, and togetherness. Happy Anniversary.",
+            "Happy Anniversary! May your bond grow stronger with every passing year.",
+            "Wishing you both endless happiness and beautiful memories together.",
+            "Happy Anniversary! May love continue to light your journey.",
+            "Congratulations on another year of love, laughter, and companionship.",
+            "Wishing you both a joyful anniversary filled with love and smiles.",
+            "Happy Anniversary! May your hearts remain forever united.",
+            "May your special day be filled with cherished memories and happiness.",
+            "Wishing you another wonderful year of togetherness. Happy Anniversary.",
+            "Happy Anniversary! May your love story continue to inspire.",
+            "Sending warm wishes for a beautiful and memorable anniversary.",
+            "May your anniversary bring you peace, love, and endless joy.",
+            "Happy Anniversary! Wishing you many more years of happiness together.",
+            "Wishing you both a day filled with love and celebration.",
+            "Happy Anniversary! May every year bring you closer together.",
+            "Congratulations on celebrating another chapter of your beautiful journey.",
+            "Wishing you both love, laughter, and happiness today and always.",
+            "Happy Anniversary! May your love continue to blossom forever.",
+            "May this anniversary be as wonderful as the love you share.",
+            "Wishing you countless blessings on your special day. Happy Anniversary.",
+            "Happy Anniversary! Here’s to another year of beautiful memories.",
+            "Wishing you both a lifetime of happiness and togetherness.",
+            "Happy Anniversary! May your hearts always beat as one.",
+            "Sending heartfelt wishes for a joyful and love-filled anniversary.",
+            "May your anniversary be filled with warmth, laughter, and happiness.",
+            "Happy Anniversary! Wishing you endless love and cherished moments.",
+            "Congratulations on another year of sharing love and life together.",
+            "Wishing you both a wonderful anniversary and many more to come.",
+            "Happy Anniversary! May your journey together remain bright and beautiful.",
+            "Wishing you love, peace, and happiness on your special day.",
+            "Happy Anniversary! May every day ahead be filled with joy.",
+            "Sending best wishes for a happy and memorable anniversary celebration.",
+            "May your love continue to grow stronger with each passing year.",
+            "Happy Anniversary! Wishing you both endless joy and laughter.",
+            "Wishing you a day full of love and treasured moments together.",
+            "Happy Anniversary! May your lives always be blessed with love.",
+            "Congratulations on another year of happiness and shared dreams.",
+            "Wishing you both many more years of love and togetherness.",
+            "Happy Anniversary! May your bond remain forever strong.",
+            "May this anniversary bring you closer and fill your hearts with joy.",
+            "Wishing you both a beautiful day and a wonderful year ahead.",
+            "Happy Anniversary! May your love shine brighter every year.",
+            "Sending loving wishes for a truly special anniversary celebration.",
+            "May your anniversary be filled with laughter, love, and sweet memories.",
+            "Happy Anniversary! Wishing you both continued happiness and success.",
+            "Wishing you a lifetime of cherished moments and endless love.",
+            "Happy Anniversary! May your love story continue forever.",
+            "Congratulations on another year of love, trust, and happiness.",
+            "Wishing you both a joyful anniversary and many blessings ahead.",
+            "Happy Anniversary! May every moment together be filled with love."
+        ];
+
+        const AnniversaryImageLinks = [
+            "https://drive.google.com/uc?export=view&id=185a1FcOGb8g685-q0zDyM0a5SkHsTv_y",
+            "https://drive.google.com/uc?export=view&id=1KxY2G1e-aEcRim4Ptlfaoa275GqTe9lu",
+            "https://drive.google.com/uc?export=view&id=1--uNqRwb2HSlxLvfCtov8iDyDDRubr66",
+            "https://drive.google.com/uc?export=view&id=1ylltHOQW4_hV1APaKkwqfwCNGMjqvHAx",
+            "https://drive.google.com/uc?export=view&id=13zVhGn50XgaEwVCd996wpvpMT7alRbhJ",
+            "https://drive.google.com/uc?export=view&id=1CyrpvxXmavOMnCzjIZJ7rlNbBpfKUkRI",
+            "https://drive.google.com/uc?export=view&id=1vxMNfJrq16vTS_H3izQj50_lGdDb2Gfu",
+            "https://drive.google.com/uc?export=view&id=1RpRUFGA2etOcPKg0DBFzM_0B5JJ1md6A",
+            "https://drive.google.com/uc?export=view&id=13yiehki2AXAyDomLmsrVeHspPLbLvLER",
+            "https://drive.google.com/uc?export=view&id=1jqYm8ptK0WyEvvxKTKUJE599k7sEDPyj",
+            "https://drive.google.com/uc?export=view&id=1oOnQb7ZW3fP2wzq4b9Hhj1wFB4gtvQ-b",
+            "https://drive.google.com/uc?export=view&id=1O8Mr69vCpOF4CpBSxEGowh5awtwghX8T",
+            "https://drive.google.com/uc?export=view&id=1kLuTdA8npzFMUhyr-Pdqj2DJkIBmyC7Y"
+        ];
+
+
+        // Initialize EmailJS
+        emailjs.init("qcbXaXrWGMaIRt6_o");
+
+        async function checkAndSendEmails() {
+            const spinner = document.getElementById('loadingSpinner');
+            const msg = document.getElementById('messageArea');
+
+            spinner.style.display = 'block';
+            msg.innerHTML = "";
+
+            try {
+                const today = new Date().toISOString().split('T')[0];
+
+                const querySnapshot = await getDocs(collection(db, "Event"));
+
+                let found = false;
+                let sentIds = new Set();
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const key = data.Occasion + "_" + data.To_Email;
+
+                    if (sentIds.has(key)) return;
+
+                    sentIds.add(key);
+                    if (data.Date === today) {
+                        found = true;
+
+                        let subject = "";
+                        let message = "";
+                        let link = "";
+                        if (data.Occasion === "Birthday") {
+                            const RandomBirthdayMessage = BirthdayMessages[Math.floor(Math.random() * BirthdayMessages.length)];
+                            const BirthdayRandomLink = BirthdayImageLinks[Math.floor(Math.random() * BirthdayImageLinks.length)];
+
+                            subject = `Happy Birthday ${data.To_Name}`;
+                            message = RandomBirthdayMessage;
+                            link = BirthdayRandomLink;
+
+                        }
+
+                        else if (data.Occasion === "Anniversary") {
+                            const RandomAnniversaryMessage = AnniversaryMessages[Math.floor(Math.random() * AnniversaryMessages.length)];
+                            const AnniversaryRandomLink = AnniversaryImageLinks[Math.floor(Math.random() * AnniversaryImageLinks.length)];
+                            subject = `Happy Anniversary ${data.To_Name}`;
+                            message = RandomAnniversaryMessage;
+                            link = AnniversaryRandomLink;
+                        }
+                        else if (data.Occasion === "Reminder-Self") {
+                            subject = `Self Reminder ${data.Reminder_Message}`;
+                            message = `Self Reminder ${data.Reminder_Message}`;
+                            link = "https://drive.google.com/uc?export=view&id=16APCwvoaWrRNchvFW_PR9z0yVBtCTWwO";
+                        }
+
+                        else if (data.Occasion === "Reminder") {
+                            subject = `Reminder ${data.To_Name}`;
+                            message = "Wishing you a joyful anniversary!";
+                            link = "https://drive.google.com/uc?export=view&id=16APCwvoaWrRNchvFW_PR9z0yVBtCTWwO";
+                        }
+
+                        else if (data.Occasion === "Reminder-Birthday") {
+                            subject = `Reminder-Birthday ${data.To_Name}`;
+                            message = `Birthday Wishes for ${data.To_Name}`;
+                            link = "https://drive.google.com/uc?export=view&id=16APCwvoaWrRNchvFW_PR9z0yVBtCTWwO";
+                        }
+
+                        else if (data.Occasion === "Reminder-Anniversary") {
+                            subject = `Reminder-Anniversary ${data.To_Name}`;
+                            message = `Anniversary Wishes for ${data.To_Name}`;
+                            link = "https://drive.google.com/uc?export=view&id=16APCwvoaWrRNchvFW_PR9z0yVBtCTWwO";
+                        }
+
+                        sendEmail(data.To_Email, subject, message, data.To_Gname, link);
+                    }
+                });
+
+                if (!found) {
+                    msg.innerHTML = "No events today.";
+                } else {
+                    msg.innerHTML = "Emails sent successfully!";
+                    msg.style.color = "green";
+                }
+
+            } catch (error) {
+                console.error(error);
+                msg.innerHTML = "Error occurred.";
+                msg.style.color = "red";
+            }
+
+            spinner.style.display = 'none';
+        }
+
+
+        function sendEmail(toEmail, subject, message, name, link) {
+            emailjs.send("service_jitwsrj", "template_m0u22pm", {
+                to_name: name,
+                subject: subject,
+                message: message,
+                email: toEmail,
+                link: link
+            })
+                .then(res => console.log("Email sent", res))
+                .catch(err => console.error("Error", err));
+        }
+
+        // Make function global
+        window.checkAndSendEmails = checkAndSendEmails;
+
+    </script>
 
 </body>
+
 </html>
