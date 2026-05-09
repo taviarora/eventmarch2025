@@ -93,9 +93,12 @@
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "jwdatabase-f0e20.firebaseapp.com",
-            projectId: "jwdatabase-f0e20"
+            // apiKey: "YOUR_API_KEY",
+            // authDomain: "jwdatabase-f0e20.firebaseapp.com",
+            // projectId: "jwdatabase-f0e20"
+                        apiKey: "AIzaSyDAHhKZEFIm4Z1HyTRGCaqJ1NGC7KelQ38",
+            authDomain: "tavinderevents.firebaseapp.com",
+            projectId: "tavinderevents"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -273,7 +276,7 @@
 
 
         // Initialize EmailJS
-        emailjs.init("qcbXaXrWGMaIRt6_o");
+        emailjs.init("AeFM3nmdcXh7cCDwK");
 
         async function checkAndSendEmails() {
             const spinner = document.getElementById('loadingSpinner');
@@ -366,7 +369,7 @@
 
 
         function sendEmail(toEmail, subject, message, name, link) {
-            emailjs.send("service_jitwsrj", "template_m0u22pm", {
+            emailjs.send("service_ql34eml", "template_68lymbm", {
                 to_name: name,
                 subject: subject,
                 message: message,
